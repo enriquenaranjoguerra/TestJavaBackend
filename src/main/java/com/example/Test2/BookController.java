@@ -12,28 +12,29 @@ public class BookController {
     @Autowired
     private BookRepository bookRepository;
 
-    @GetMapping
-    public Iterable findAll() {
+    @GetMapping("/all")
+    public Iterable<Book> findAll() {
         return bookRepository.findAll();
     }
 
     @GetMapping("/title/{bookTitle}")
-    public List findByTitle(@PathVariable String bookTitle) {
+    public List<Book> findByTitle(@PathVariable String bookTitle) {
         return bookRepository.findByTitle(bookTitle);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public Book findOne(@PathVariable Long id) {
         return bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Book create(@RequestBody Book book) {
+        System.out.println(book);
         return bookRepository.save(book);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable Long id) {
         bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
         bookRepository.deleteById(id);

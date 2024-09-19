@@ -22,13 +22,13 @@ public class SpringBootBootstrapLiveTest {
         Response response = RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(book)
-                .post(API_ROOT);
-        return API_ROOT + "/" + response.jsonPath().getLong("id");
+                .post(API_ROOT + "/create");
+        return API_ROOT + "/create" + response.jsonPath().getLong("id");
     }
 
     @Test
     public void whenGetAllBooks_thenOk() {
-        Response response = RestAssured.get(API_ROOT);
+        Response response = RestAssured.get(API_ROOT + "/all");
         assertEquals(HttpStatus.OK.value(), response.getStatusCode());
     }
 
