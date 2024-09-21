@@ -1,9 +1,11 @@
 package com.example.Test2;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -30,8 +32,15 @@ public class BookController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Book create(@RequestBody Book book) {
-        System.out.println(book);
         return bookRepository.save(book);
+    }
+
+    @PostMapping("/create_several")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<Book> createSeveral(@RequestBody @NotNull List<Book> books) {
+        List<Book> savedBooks = new ArrayList<>();
+        books.stream().filter(b -> findByTitle(b.getTitle()).isEmpty()).forEach(b -> savedBooks.add(bookRepository.save(b)));
+        return savedBooks;
     }
 
     @DeleteMapping("/delete/{id}")
@@ -40,8 +49,13 @@ public class BookController {
         bookRepository.deleteById(id);
     }
 
-    @PutMapping("/{id}")
-    public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
+    @DeleteMapping("/delete_all")
+    public void deleteAll() {
+        bookRepository.deleteAll();
+    }
+
+    @PutMapping("/update/{id}")
+    public Book updateBook(@RequestBody @NotNull Book book, @PathVariable Long id) {
         if (book.getId() != id) {
             throw new BookIdMismatchException();
         }

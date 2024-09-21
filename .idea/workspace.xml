@@ -63,7 +63,20 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
 }</component>
-  <component name="RunManager" selected="JUnit.All in TestJavaBackend (2)">
+  <component name="RunManager" selected="Application.Test2Application">
+    <configuration name="Test2Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.Test2.Test2Application" />
+      <module name="Test2" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.Test2.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="All in TestJavaBackend (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="TestJavaBackend" />
       <option name="PACKAGE_NAME" value="" />
@@ -73,14 +86,6 @@
       </method>
     </configuration>
     <configuration name="All in TestJavaBackend (2)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="TestJavaBackend" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="All in TestJavaBackend" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="TestJavaBackend" />
       <option name="PACKAGE_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
@@ -121,7 +126,7 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.All in TestJavaBackend" />
+      <item itemvalue="Application.Test2Application" />
       <item itemvalue="JUnit.All in TestJavaBackend (1)" />
       <item itemvalue="JUnit.All in TestJavaBackend (2)" />
       <item itemvalue="JUnit.SpringBootBootstrapLiveTest.whenGetAllBooks_thenOk (1)" />
@@ -129,11 +134,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Test2Application" />
         <item itemvalue="JUnit.All in TestJavaBackend (2)" />
         <item itemvalue="JUnit.SpringBootBootstrapLiveTest.whenGetBooksByTitle_thenOK (1)" />
         <item itemvalue="JUnit.SpringBootBootstrapLiveTest.whenGetAllBooks_thenOk (1)" />
         <item itemvalue="JUnit.All in TestJavaBackend (1)" />
-        <item itemvalue="JUnit.All in TestJavaBackend" />
       </list>
     </recent_temporary>
   </component>
@@ -147,16 +152,5 @@
       <updated>1722321408380</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/Test2/BookController.java</url>
-          <line>16</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
