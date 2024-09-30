@@ -13,9 +13,9 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Theme {
 
-    public Theme(String name, long categoryId, String description){
+    public Theme(String name, Category category, String description){
         this.name = name;
-        this.categoryId = categoryId;
+        this.category = category;
         this.description = description;
     }
 
@@ -27,9 +27,8 @@ public class Theme {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    @Column(nullable = false)
-    private long categoryId;
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Column(nullable = true)
     private String description;

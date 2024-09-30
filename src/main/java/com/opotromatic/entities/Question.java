@@ -13,10 +13,10 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Question {
 
-    public Question(String name, long categoryId, long themeId, boolean correct, String explanation){
+    public Question(String name, Category category, Theme theme, boolean correct, String explanation){
         this.name = name;
-        this.categoryId = categoryId;
-        this.themeId = themeId;
+        this.category = category;
+        this.theme = theme;
         this.correct = correct;
         this.description = explanation;
     }
@@ -29,15 +29,13 @@ public class Question {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    @Column(nullable = false)
-    private long categoryId;
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
 
     @ManyToOne
-    @JoinColumn(name = "theme_id")
-    @Column(nullable = false)
-    private long themeId;
+    @JoinColumn(name = "theme_id", nullable = false)
+    private Theme theme;
 
     @Column(nullable = false)
     private boolean correct;

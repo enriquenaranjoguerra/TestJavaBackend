@@ -13,6 +13,9 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -64,10 +67,15 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.Test2Application">
-    <configuration name="Test2Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.example.Test2.Test2Application" />
-      <module name="Test2" />
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.opotromatic" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.BooksApplication">
+    <configuration name="BooksApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.Test2.BooksApplication" />
+      <module name="TestJavaBackend" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.example.Test2.*" />
@@ -94,7 +102,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SpringBootBootstrapLiveTest.whenGetAllBooks_thenOk (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SpringBootBootstrapLiveTest.whenGetAllBooks_thenOk" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="TestJavaBackend" />
       <extension name="coverage">
         <pattern>
@@ -110,7 +118,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SpringBootBootstrapLiveTest.whenGetBooksByTitle_thenOK (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SpringBootBootstrapLiveTest.whenGetBooksByTitle_thenOK" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="TestJavaBackend" />
       <extension name="coverage">
         <pattern>
@@ -127,18 +135,16 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.Test2Application" />
+      <item itemvalue="Application.BooksApplication" />
+      <item itemvalue="JUnit.SpringBootBootstrapLiveTest.whenGetAllBooks_thenOk" />
+      <item itemvalue="JUnit.SpringBootBootstrapLiveTest.whenGetBooksByTitle_thenOK" />
       <item itemvalue="JUnit.All in TestJavaBackend (1)" />
       <item itemvalue="JUnit.All in TestJavaBackend (2)" />
-      <item itemvalue="JUnit.SpringBootBootstrapLiveTest.whenGetAllBooks_thenOk (1)" />
-      <item itemvalue="JUnit.SpringBootBootstrapLiveTest.whenGetBooksByTitle_thenOK (1)" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test2Application" />
+        <item itemvalue="Application.BooksApplication" />
         <item itemvalue="JUnit.All in TestJavaBackend (2)" />
-        <item itemvalue="JUnit.SpringBootBootstrapLiveTest.whenGetBooksByTitle_thenOK (1)" />
-        <item itemvalue="JUnit.SpringBootBootstrapLiveTest.whenGetAllBooks_thenOk (1)" />
         <item itemvalue="JUnit.All in TestJavaBackend (1)" />
       </list>
     </recent_temporary>
