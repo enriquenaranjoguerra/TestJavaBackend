@@ -18,7 +18,7 @@ public class Question {
         this.category = category;
         this.theme = theme;
         this.correct = correct;
-        this.description = explanation;
+        this.explanation = explanation;
     }
 
     @Id
@@ -41,5 +41,5 @@ public class Question {
     private boolean correct;
 
     @Column(nullable = true)
-    private String description;
+    private String explanation;
 }
