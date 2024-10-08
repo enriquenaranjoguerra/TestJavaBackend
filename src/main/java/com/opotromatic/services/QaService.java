@@ -20,7 +20,18 @@ public class QaService {
         return mappings.stream().map(QaMapping::getAnswer).collect(Collectors.toList());
     }
 
+    public QaMapping findByQuestionAndAnswer(Question question, Answer answer){
+        if(qaMappingRepository.findByQuestionAndAnswer(question, answer).isPresent()){
+            return qaMappingRepository.findByQuestionAndAnswer(question, answer).get();
+        }
+
+    }
+
     public QaMapping saveMapping(Question question, Answer answer, boolean correct){
-        return qaMappingRepository.save(new QaMapping(question, answer, correct));
+        if(qaMappingRepository.findByQuestionAndAnswer(question, answer).isPresent()){
+            return new QaMapping();
+        } else {
+            return qaMappingRepository.save(new QaMapping(question, answer, correct));
+        }
     }
 }

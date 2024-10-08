@@ -32,14 +32,9 @@ public class QuestionsController {
     @Autowired
     private QaService qaService;
 
-    private String nonExistingElementMessage(String element){
+    private String nonExistingElementMessage(String element) {
         return String.format("That %s does not exists", element);
     }
-
-
-    String noExistingCategoryMessage = "That category does not exists";
-    String noExistingThemeMessage = "That theme does not exists";
-    String noExistingQuestionMessage = "That question does not exists";
 
 
     @GetMapping("/question/get_by_category/{categoryName}")
@@ -66,7 +61,7 @@ public class QuestionsController {
         if (categoryOptional.isPresent()) {
             return categoryOptional.get();
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, noExistingCategoryMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("category"));
         }
     }
 
@@ -141,12 +136,7 @@ public class QuestionsController {
 
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("question")));
         Answer answer = answerRepository.findById(answerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("answer")));
-        if (qaService.findByName(answer.getName()).isEmpty()) {
-            answerRepository.save(answer);
-            return qaService.saveMapping(question, answer, correct);
-        } else {
-            return new Answer();
-        }
+        return qaService.saveMapping(question, answer, correct);
     }
 
 }
