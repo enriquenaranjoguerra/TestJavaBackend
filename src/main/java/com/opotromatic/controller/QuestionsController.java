@@ -1,11 +1,11 @@
 package com.opotromatic.controller;
 
-import com.opotromatic.entities.Category;
-import com.opotromatic.entities.Question;
+import com.opotromatic.entities.*;
+import com.opotromatic.repositories.AnswerRepository;
 import com.opotromatic.repositories.CategoryRepository;
 import com.opotromatic.repositories.QuestionRepository;
-import com.opotromatic.entities.Theme;
 import com.opotromatic.repositories.ThemeRepository;
+import com.opotromatic.services.QaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +26,38 @@ public class QuestionsController {
     private ThemeRepository themeRepository;
     @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private AnswerRepository answerRepository;
+
+    @Autowired
+    private QaService qaService;
+
+    private String nonExistingElementMessage(String element){
+        return String.format("That %s does not exists", element);
+    }
 
 
-    @GetMapping("/question/get_by_category/{categoryId}")
-    public List<Question> findByCategory(@PathVariable long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+    String noExistingCategoryMessage = "That category does not exists";
+    String noExistingThemeMessage = "That theme does not exists";
+    String noExistingQuestionMessage = "That question does not exists";
+
+
+    @GetMapping("/question/get_by_category/{categoryName}")
+    public List<Question> findByCategory(@PathVariable String categoryName) {
+        Category category = categoryRepository.findByName(categoryName).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("category")));
         return questionRepository.findByCategory(category);
+    }
+
+    @GetMapping("/question/get_by_theme/{themeName}")
+    public List<Question> findByTheme(@PathVariable String themeName) {
+        Theme theme = themeRepository.findByName(themeName).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("theme")));
+        return questionRepository.findByTheme(theme);
+    }
+
+    @GetMapping("/question/get_answers/{questionName}")
+    public List<Answer> findByQuestion(@PathVariable String questionName) {
+        Question question = questionRepository.findByName(questionName).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("question")));
+        return qaService.getAnswersForQuestion(question);
     }
 
 
@@ -40,9 +66,10 @@ public class QuestionsController {
         if (categoryOptional.isPresent()) {
             return categoryOptional.get();
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "That category does not exists");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, noExistingCategoryMessage);
         }
     }
+
     private Theme findThemeByNameAndCategory(String themeName, Category category) {
         Optional<Theme> themeOptional = themeRepository.findByNameAndCategory(themeName, category);
         if (themeOptional.isPresent()) {
@@ -54,18 +81,16 @@ public class QuestionsController {
 
     @PostMapping("/question/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Question createQuestion(@RequestBody Map<String, Object> questionData) {
-        String questionName = (String) questionData.get("name");
-        String categoryName = (String) questionData.get("category");
-        String themeName = (String) questionData.get("theme");
-        Boolean correct = (Boolean) questionData.get("correct");
-        String explanation = (String) questionData.get("explanation");
+    public Question createQuestion(@RequestBody Map<String, String> questionData) {
+        String questionName = questionData.get("name");
+        String categoryName = questionData.get("category");
+        String themeName = questionData.get("theme");
 
         Category category = findCategoryByName(categoryName);
         Theme theme = findThemeByNameAndCategory(themeName, category);
 
-        if(questionRepository.findByNameAndCategoryAndTheme(questionName, category, theme).isEmpty()){
-            return questionRepository.save(new Question(questionName, category, theme, correct, explanation));
+        if (questionRepository.findByNameAndCategoryAndTheme(questionName, category, theme).isEmpty()) {
+            return questionRepository.save(new Question(questionName, category, theme));
         } else {
             return new Question();
         }
@@ -94,6 +119,33 @@ public class QuestionsController {
             return categoryRepository.save(category);
         } else {
             return new Category();
+        }
+    }
+
+    @PostMapping("/answer/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Answer createAnswer(@RequestBody Answer answer) {
+        if (answerRepository.findByName(answer.getName()).isEmpty()) {
+            return answerRepository.save(answer);
+        } else {
+            return new Answer();
+        }
+    }
+
+    @PostMapping("/qa_mapping/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public QaMapping createQaMapping(@RequestBody Map<String, Object> qaMappingData) {
+        Long questionId = (Long) qaMappingData.get("questionId");
+        Long answerId = (Long) qaMappingData.get("answerId");
+        boolean correct = (Boolean) qaMappingData.get("correct");
+
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("question")));
+        Answer answer = answerRepository.findById(answerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("answer")));
+        if (qaService.findByName(answer.getName()).isEmpty()) {
+            answerRepository.save(answer);
+            return qaService.saveMapping(question, answer, correct);
+        } else {
+            return new Answer();
         }
     }
 

@@ -21,7 +21,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
+    @Lob
     @Column(nullable = false, unique = true)
     private String name;
 

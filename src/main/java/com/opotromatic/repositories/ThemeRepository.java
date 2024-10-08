@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface ThemeRepository extends CrudRepository<Theme, Long> {
     List<Theme> findByCategory(Category category);
+    Optional<Theme> findByName(String name);
     Optional<Theme> findByNameAndCategory(String name, Category category);
 
 }

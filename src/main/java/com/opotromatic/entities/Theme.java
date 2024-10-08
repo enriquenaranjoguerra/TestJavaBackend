@@ -22,7 +22,7 @@ public class Theme {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
+    @Lob
     @Column(nullable = false, unique = true)
     private String name;
 
