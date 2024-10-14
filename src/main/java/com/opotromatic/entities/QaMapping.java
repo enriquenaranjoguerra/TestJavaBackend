@@ -30,7 +30,7 @@ public class QaMapping {
     private Question question;
 
     @ManyToOne
-    @JoinColumn(name = "answer id", nullable = false)
+    @JoinColumn(name = "answer_id", nullable = false)
     private Answer answer;
 
     @Column(nullable = false)

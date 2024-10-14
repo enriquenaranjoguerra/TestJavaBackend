@@ -23,6 +23,8 @@ public class QaService {
     public QaMapping findByQuestionAndAnswer(Question question, Answer answer){
         if(qaMappingRepository.findByQuestionAndAnswer(question, answer).isPresent()){
             return qaMappingRepository.findByQuestionAndAnswer(question, answer).get();
+        } else {
+            return new QaMapping();
         }
 
     }
