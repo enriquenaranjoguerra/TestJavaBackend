@@ -1,9 +1,6 @@
 package com.opotromatic.controller;
 
-import com.opotromatic.DTO.AnswerDTO;
-import com.opotromatic.DTO.QaMappingDTO;
-import com.opotromatic.DTO.QuestionDTO;
-import com.opotromatic.DTO.ThemeDTO;
+import com.opotromatic.DTO.*;
 import com.opotromatic.entities.*;
 import com.opotromatic.repositories.AnswerRepository;
 import com.opotromatic.repositories.CategoryRepository;
@@ -17,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @RestController
 @RequestMapping("/api/questions")
@@ -35,46 +33,51 @@ public class QuestionsController {
     @Autowired
     private QaService qaService;
 
-    private String nonExistingElementMessage(String element) {
-        return String.format("That %s does not exists", element);
+
+
+    private Supplier<ResponseStatusException> nonExistingElementMessage(String element){
+        return () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("That %s does not exists", element));
     }
 
 
     @GetMapping("/question/get_by_category/{categoryId}")
     public List<Question> findByCategory(@PathVariable Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("category")));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(nonExistingElementMessage("category"));
         return questionRepository.findByCategory(category);
     }
 
     @GetMapping("/question/get_by_theme/{themeId}")
     public List<Question> findByTheme(@PathVariable Long themeId) {
-        Theme theme = themeRepository.findById(themeId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("theme")));
+        Theme theme = themeRepository.findById(themeId).orElseThrow(nonExistingElementMessage("theme"));
         return questionRepository.findByTheme(theme);
     }
 
-    @GetMapping("/question/get_answers/{questionId}")
+    @GetMapping("/answer/get_by_question_id/{questionId}")
     public List<Answer> findByQuestion(@PathVariable Long questionId) {
-        Question question = questionRepository.findById(questionId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("question")));
+        Question question = questionRepository.findById(questionId).orElseThrow(nonExistingElementMessage("question"));
+        // TODO review this
         return qaService.getAnswersForQuestion(question);
+    }
+
+    @GetMapping("/answer/check_answer")
+    public Boolean checkAnswer(CheckAnswerDTO checkAnswerData){
+        Question question = questionRepository.findById(checkAnswerData.getQuestionId()).orElseThrow(nonExistingElementMessage("question"));
+        Answer answer = answerRepository.findById(checkAnswerData.getAnswerId()).orElseThrow(nonExistingElementMessage("answer"));
+        return qaService.findByQuestionAndAnswer(question, answer).isCorrect() == checkAnswerData.isMarked();
+    }
+
+    @GetMapping("/answer/check_several_answer")
+    public List<Boolean> checkAnswer(List<CheckAnswerDTO> checkAnswerSeveralData){
+        return checkAnswerSeveralData.stream().map(this::checkAnswer).toList();
     }
 
 
     private Category findCategoryById(Long categoryId) {
-        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
-        if (categoryOptional.isPresent()) {
-            return categoryOptional.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("category"));
-        }
+        return categoryRepository.findById(categoryId).orElseThrow(nonExistingElementMessage("category"));
     }
 
     private Theme findThemeById(Long id) {
-        Optional<Theme> themeOptional = themeRepository.findById(id);
-        if (themeOptional.isPresent()) {
-            return themeOptional.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("Theme"));
-        }
+        return themeRepository.findById(id).orElseThrow(nonExistingElementMessage("theme"));
     }
 
     @PostMapping("/question/create")
@@ -137,8 +140,8 @@ public class QuestionsController {
     @PostMapping("/qa_mapping/create")
     @ResponseStatus(HttpStatus.CREATED)
     public QaMapping createQaMapping(@RequestBody QaMappingDTO qaMappingData) {
-        Question question = questionRepository.findById(qaMappingData.getQuestionId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("question")));
-        Answer answer = answerRepository.findById(qaMappingData.getAnswerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, nonExistingElementMessage("answer")));
+        Question question = questionRepository.findById(qaMappingData.getQuestionId()).orElseThrow(nonExistingElementMessage("question"));
+        Answer answer = answerRepository.findById(qaMappingData.getAnswerId()).orElseThrow(nonExistingElementMessage("answer"));
         return qaService.saveMapping(question, answer, qaMappingData.isCorrect());
     }
 
