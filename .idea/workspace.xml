@@ -55,6 +55,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/dev/Test2/src/main/resources/templates",
     "onboarding.tips.debug.path": "C:/dev/Test2/src/main/java/org/example/Main.java",
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.15",
@@ -63,6 +64,9 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\dev\Test2\src\main\resources\templates" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.opotromatic.entities" />
       <recent name="com.opotromatic" />
@@ -86,7 +90,7 @@
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.opotromatic.QuestionsApplication" />
-      <module name="TestJavaBackend" />
+      <module name="Test2" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.opotromatic.*" />

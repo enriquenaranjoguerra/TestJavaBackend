@@ -43,6 +43,11 @@ public class QuestionsController {
         return "index";
     }
 
+    @GetMapping("/prueba")
+    public String prueba() {
+        return "prueba";
+    }
+
 
     @GetMapping("/category/get_all")
     public Iterable<Category> getAllCategories(){
