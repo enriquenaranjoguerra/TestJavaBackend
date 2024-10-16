@@ -9,13 +9,15 @@ import com.opotromatic.repositories.ThemeRepository;
 import com.opotromatic.services.QaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-@RestController
+@Controller
 @RequestMapping("/api/questions")
 
 public class QuestionsController {
@@ -44,8 +46,14 @@ public class QuestionsController {
     }
 
     @GetMapping("/prueba")
-    public String prueba() {
+    public String prueba(Model model) {
+        String message = "¡Hola desde el controlador";
+        model.addAttribute("message", message);
         return "prueba";
+    }
+    @GetMapping("/Ejemplo1")
+    public String ejemplo1() {
+        return "Ejemplo1";
     }
 
 
