@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 @RestController
@@ -39,6 +38,22 @@ public class QuestionsController {
         return () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("That %s does not exists", element));
     }
 
+    @GetMapping("/")
+    public String home(){
+        return "index";
+    }
+
+
+    @GetMapping("/category/get_all")
+    public Iterable<Category> getAllCategories(){
+        return categoryRepository.findAll();
+    }
+
+    @GetMapping("/theme/get_by_category_id/{categoryId}")
+    public Iterable<Theme> getThemesByCategory(@RequestParam Long categoryId){
+        Category category = findCategoryById(categoryId);
+        return themeRepository.findByCategory(category);
+    }
 
     @GetMapping("/question/get_by_category/{categoryId}")
     public List<Question> findByCategory(@PathVariable Long categoryId) {
