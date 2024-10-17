@@ -1,5 +1,6 @@
 package com.opotromatic.repositories;
 
+import com.opotromatic.entities.Block;
 import com.opotromatic.entities.Category;
 import com.opotromatic.entities.Question;
 import com.opotromatic.entities.Theme;
@@ -9,9 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ThemeRepository extends CrudRepository<Theme, Long> {
-    List<Theme> findByCategory(Category category);
+    List<Theme> findByBlock(Block block);
+
     Optional<Theme> findByName(String name);
-    Optional<Theme> findByNameAndCategory(String name, Category category);
-    Optional<Theme> findByIdAndCategory(Long id, Category category);
+
+    Optional<Theme> findByNameAndBlock(String name, Block block);
+
+    Optional<Theme> findByIdAndBlock(Long id, Block block);
 
 }

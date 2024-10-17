@@ -7,8 +7,8 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThemeDTO {
+public class BlockDTO {
     private String name;
-    private Long blockId;
+    private Long categoryId;
     private String description;
 }

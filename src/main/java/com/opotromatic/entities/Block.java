@@ -11,11 +11,11 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Theme {
+public class Block {
 
-    public Theme(String name, Block block, String description){
+    public Block(String name, Category category, String description){
         this.name = name;
-        this.block = block;
+        this.category = category;
         this.description = description;
     }
 
@@ -28,8 +28,8 @@ public class Theme {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "block_id", nullable = false)
-    private Block block;
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Column(nullable = true)
     private String description;

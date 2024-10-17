@@ -2,10 +2,7 @@ package com.opotromatic.controller;
 
 import com.opotromatic.DTO.*;
 import com.opotromatic.entities.*;
-import com.opotromatic.repositories.AnswerRepository;
-import com.opotromatic.repositories.CategoryRepository;
-import com.opotromatic.repositories.QuestionRepository;
-import com.opotromatic.repositories.ThemeRepository;
+import com.opotromatic.repositories.*;
 import com.opotromatic.services.QaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +24,8 @@ public class QuestionsController {
     @Autowired
     private ThemeRepository themeRepository;
     @Autowired
+    private BlockRepository blockRepository;
+    @Autowired
     private QuestionRepository questionRepository;
     @Autowired
     private AnswerRepository answerRepository;
@@ -35,13 +34,12 @@ public class QuestionsController {
     private QaService qaService;
 
 
-
-    private Supplier<ResponseStatusException> nonExistingElementMessage(String element){
+    private Supplier<ResponseStatusException> nonExistingElementMessage(String element) {
         return () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("That %s does not exists", element));
     }
 
     @GetMapping("/")
-    public String home(){
+    public String home() {
         return "index";
     }
 
@@ -51,6 +49,7 @@ public class QuestionsController {
         model.addAttribute("message", message);
         return "prueba";
     }
+
     @GetMapping("/Ejemplo1")
     public String ejemplo1() {
         return "Ejemplo1";
@@ -58,14 +57,14 @@ public class QuestionsController {
 
 
     @GetMapping("/category/get_all")
-    public Iterable<Category> getAllCategories(){
+    public Iterable<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
     @GetMapping("/theme/get_by_category_id/{categoryId}")
-    public Iterable<Theme> getThemesByCategory(@RequestParam Long categoryId){
-        Category category = findCategoryById(categoryId);
-        return themeRepository.findByCategory(category);
+    public Iterable<Theme> getThemesByCategory(@RequestParam Long categoryId) {
+        Block block = findBlockById(categoryId);
+        return themeRepository.findByBlock(block);
     }
 
     @GetMapping("/question/get_by_category/{categoryId}")
@@ -88,20 +87,24 @@ public class QuestionsController {
     }
 
     @GetMapping("/answer/check_answer")
-    public Boolean checkAnswer(CheckAnswerDTO checkAnswerData){
+    public Boolean checkAnswer(CheckAnswerDTO checkAnswerData) {
         Question question = questionRepository.findById(checkAnswerData.getQuestionId()).orElseThrow(nonExistingElementMessage("question"));
         Answer answer = answerRepository.findById(checkAnswerData.getAnswerId()).orElseThrow(nonExistingElementMessage("answer"));
         return qaService.findByQuestionAndAnswer(question, answer).isCorrect() == checkAnswerData.isMarked();
     }
 
     @GetMapping("/answer/check_several_answer")
-    public List<Boolean> checkAnswer(List<CheckAnswerDTO> checkAnswerSeveralData){
+    public List<Boolean> checkAnswer(List<CheckAnswerDTO> checkAnswerSeveralData) {
         return checkAnswerSeveralData.stream().map(this::checkAnswer).toList();
     }
 
 
     private Category findCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(nonExistingElementMessage("category"));
+    }
+
+    private Block findBlockById(Long id) {
+        return blockRepository.findById(id).orElseThrow(nonExistingElementMessage("block"));
     }
 
     private Theme findThemeById(Long id) {
@@ -134,14 +137,27 @@ public class QuestionsController {
         }
     }
 
+    @PostMapping("/block/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Theme createTheme(@RequestBody BlockDTO blockData) {
+        String blockName = blockData.getName();
+
+        Category category = findCategoryById(blockData.getCategoryId());
+        if (blockRepository.findByNameAndCategory(blockName, category).isEmpty()) {
+            return blockRepository.save(new Block(blockName, category, blockData.getDescription()));
+        } else {
+            return new Theme();
+        }
+    }
+
     @PostMapping("/theme/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Theme createTheme(@RequestBody ThemeDTO themeData) {
         String themeName = themeData.getName();
 
-        Category category = findCategoryById(themeData.getCategoryId());
-        if (themeRepository.findByNameAndCategory(themeName, category).isEmpty()) {
-            return themeRepository.save(new Theme(themeName, category, themeData.getDescription()));
+        Block block = findBlockById(themeData.getBlockId());
+        if (themeRepository.findByNameAndBlock(themeName, block).isEmpty()) {
+            return themeRepository.save(new Theme(themeName, block, themeData.getDescription()));
         } else {
             return new Theme();
         }
