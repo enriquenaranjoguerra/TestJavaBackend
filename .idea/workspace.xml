@@ -67,6 +67,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\dev\Test2\src\main\resources\templates" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\dev\TestJavaBackend\src\main\resources\templates" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.opotromatic.entities" />
       <recent name="com.opotromatic" />
@@ -90,7 +93,7 @@
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.opotromatic.QuestionsApplication" />
-      <module name="Test2" />
+      <module name="TestJavaBackend" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.opotromatic.*" />
