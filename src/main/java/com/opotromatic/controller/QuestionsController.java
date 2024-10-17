@@ -61,16 +61,10 @@ public class QuestionsController {
         return categoryRepository.findAll();
     }
 
-    @GetMapping("/theme/get_by_category_id/{categoryId}")
-    public Iterable<Theme> getThemesByCategory(@RequestParam Long categoryId) {
-        Block block = findBlockById(categoryId);
+    @GetMapping("/theme/get_by_block_id/{blockId}")
+    public Iterable<Theme> getThemesByBlock(@RequestParam Long blockId) {
+        Block block = findBlockById(blockId);
         return themeRepository.findByBlock(block);
-    }
-
-    @GetMapping("/question/get_by_category/{categoryId}")
-    public List<Question> findByCategory(@PathVariable Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(nonExistingElementMessage("category"));
-        return questionRepository.findByCategory(category);
     }
 
     @GetMapping("/question/get_by_theme/{themeId}")
@@ -111,6 +105,7 @@ public class QuestionsController {
         return themeRepository.findById(id).orElseThrow(nonExistingElementMessage("theme"));
     }
 
+    @ResponseBody
     @PostMapping("/question/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Question createQuestion(@RequestBody QuestionDTO questionData) {
@@ -124,6 +119,7 @@ public class QuestionsController {
         }
     }
 
+    @ResponseBody
     @PostMapping("/answer/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Answer createAnswer(@RequestBody AnswerDTO answerData) {
@@ -137,19 +133,21 @@ public class QuestionsController {
         }
     }
 
+    @ResponseBody
     @PostMapping("/block/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Theme createTheme(@RequestBody BlockDTO blockData) {
+    public Block createBlock(@RequestBody BlockDTO blockData) {
         String blockName = blockData.getName();
 
         Category category = findCategoryById(blockData.getCategoryId());
         if (blockRepository.findByNameAndCategory(blockName, category).isEmpty()) {
             return blockRepository.save(new Block(blockName, category, blockData.getDescription()));
         } else {
-            return new Theme();
+            return new Block();
         }
     }
 
+    @ResponseBody
     @PostMapping("/theme/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Theme createTheme(@RequestBody ThemeDTO themeData) {
@@ -163,6 +161,7 @@ public class QuestionsController {
         }
     }
 
+    @ResponseBody
     @PostMapping("/category/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Category createCategory(@RequestBody Category category) {
@@ -173,12 +172,14 @@ public class QuestionsController {
         }
     }
 
+    @ResponseBody
     @PostMapping("/several_answer/create")
     @ResponseStatus(HttpStatus.CREATED)
     public List<Answer> createSeveralAnswer(@RequestBody List<AnswerDTO> answers) {
         return answers.stream().map(this::createAnswer).toList();
     }
 
+    @ResponseBody
     @PostMapping("/qa_mapping/create")
     @ResponseStatus(HttpStatus.CREATED)
     public QaMapping createQaMapping(@RequestBody QaMappingDTO qaMappingData) {
@@ -187,6 +188,7 @@ public class QuestionsController {
         return qaService.saveMapping(question, answer, qaMappingData.isCorrect());
     }
 
+    @ResponseBody
     @PostMapping("/several_qa_mapping/create")
     @ResponseStatus(HttpStatus.CREATED)
     public List<QaMapping> createSeveralQaMapping(@RequestBody List<QaMappingDTO> qaMappingSeveralData) {

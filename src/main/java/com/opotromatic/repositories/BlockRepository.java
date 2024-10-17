@@ -7,9 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface BlockRepository extends CrudRepository<Long, Block> {
-
-    Optional<Block> findById(Long id);
+public interface BlockRepository extends CrudRepository<Block, Long> {
 
     List<Block> findByCategory(Category category);
 
