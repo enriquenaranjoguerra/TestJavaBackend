@@ -9,6 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class QuestionDTO {
     private String name;
-    private Long categoryId;
     private Long themeId;
 }

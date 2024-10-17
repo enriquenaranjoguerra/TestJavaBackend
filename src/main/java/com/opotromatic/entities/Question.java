@@ -13,9 +13,8 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Question {
 
-    public Question(String name, Category category, Theme theme){
+    public Question(String name, Theme theme){
         this.name = name;
-        this.category = category;
         this.theme = theme;
     }
 
@@ -26,10 +25,6 @@ public class Question {
     @Lob
     @Column(nullable = false, unique = true, columnDefinition = "TEXT")
     private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "theme_id", nullable = false)

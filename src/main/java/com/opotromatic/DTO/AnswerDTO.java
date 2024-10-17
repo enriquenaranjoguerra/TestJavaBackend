@@ -9,7 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class AnswerDTO {
     private String name;
-    private Long categoryId;
     private Long themeId;
     private String explanation;
 }

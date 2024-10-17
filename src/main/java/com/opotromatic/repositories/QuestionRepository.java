@@ -14,5 +14,5 @@ public interface QuestionRepository extends CrudRepository<Question, Long> {
     List<Question> findByTheme(Theme theme);
 
     Optional<Question> findByName(String name);
-    List<Question> findByNameAndCategoryAndTheme(String name, Category category, Theme theme);
+    List<Question> findByNameAndTheme(String name, Theme theme);
 }

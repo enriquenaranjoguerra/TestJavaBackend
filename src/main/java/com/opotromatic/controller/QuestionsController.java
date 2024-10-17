@@ -104,11 +104,10 @@ public class QuestionsController {
     @ResponseStatus(HttpStatus.CREATED)
     public Question createQuestion(@RequestBody QuestionDTO questionData) {
         String questionName = questionData.getName();
-        Category category = findCategoryById(questionData.getCategoryId());
         Theme theme = findThemeById(questionData.getThemeId());
 
-        if (questionRepository.findByNameAndCategoryAndTheme(questionName, category, theme).isEmpty()) {
-            return questionRepository.save(new Question(questionName, category, theme));
+        if (questionRepository.findByNameAndTheme(questionName, theme).isEmpty()) {
+            return questionRepository.save(new Question(questionName, theme));
         } else {
             return new Question();
         }
@@ -118,11 +117,10 @@ public class QuestionsController {
     @ResponseStatus(HttpStatus.CREATED)
     public Answer createAnswer(@RequestBody AnswerDTO answerData) {
         String answerName = answerData.getName();
-        Category category = findCategoryById(answerData.getCategoryId());
         Theme theme = findThemeById(answerData.getThemeId());
 
         if (answerRepository.findByName(answerData.getName()).isEmpty()) {
-            return answerRepository.save(new Answer(answerName, category, theme, answerData.getExplanation()));
+            return answerRepository.save(new Answer(answerName, theme, answerData.getExplanation()));
         } else {
             return new Answer();
         }
