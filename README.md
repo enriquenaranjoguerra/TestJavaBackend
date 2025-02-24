@@ -5,3 +5,6 @@ Element structure
 - Question (contained in theme)
 - Answer (contained in theme)
 - QaMapping (combines questions with answers)
+
+Listening port: 8081
+Localhost test URL: http://localhost:8081/
