@@ -1,4 +1,4 @@
-package com.opotromatic.controllers;
+package com.opotromatic.services;
 
 import com.opotromatic.DTO.CheckAnswerDTO;
 import com.opotromatic.entities.*;
@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/questions")
 
-public class QuestionsController {
+public class QuestionsService {
 
     private final CategoryRepository categoryRepository;
     private final ThemeRepository themeRepository;
@@ -22,7 +22,7 @@ public class QuestionsController {
     private final QaService qaService;
     private final ControllerUtils controllerUtils;
 
-    public QuestionsController(
+    public QuestionsService(
             CategoryRepository categoryRepository,
             ThemeRepository themeRepository,
             BlockRepository blockRepository,
@@ -41,19 +41,19 @@ public class QuestionsController {
 
 
     @GetMapping("/category/get_all")
-    public Iterable<Category> getAllCategories() {
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
     @GetMapping("/block/get_by_category_id/{blockId}")
-    public Iterable<Block> getBlocksByCategory(@RequestParam Long categoryId) {
+    public List<Block> getBlocksByCategory(@PathVariable Long categoryId) {
         Category category = controllerUtils.findCategoryById(categoryId);
         return blockRepository.findByCategory(category);
 
     }
 
     @GetMapping("/theme/get_by_block_id/{blockId}")
-    public Iterable<Theme> getThemesByBlock(@RequestParam Long blockId) {
+    public List<Theme> getThemesByBlock(@PathVariable Long blockId) {
         Block block = controllerUtils.findBlockById(blockId);
         return themeRepository.findByBlock(block);
     }
@@ -66,13 +66,12 @@ public class QuestionsController {
 
     @GetMapping("/answer/get_by_question_id/{questionId}")
     public List<Answer> findByQuestion(@PathVariable Long questionId) {
-        Question question = questionRepository.findById(questionId).orElseThrow(controllerUtils.nonExistingElementMessage("question"));
-        // TODO review this
-        return qaService.getAnswersForQuestion(question);
+        Question question = questionRepository.findWithAnswersById(questionId).orElseThrow(controllerUtils.nonExistingElementMessage("question"));
+        return question.getAnswers();
     }
 
-    @GetMapping("/answer/check_answer")
-    public Boolean checkAnswer(CheckAnswerDTO checkAnswerData) {
+    @PostMapping("/answer/check_answer")
+    public Boolean checkAnswer(@RequestBody CheckAnswerDTO checkAnswerData) {
         Question question = questionRepository.findById(checkAnswerData.getQuestionId()).orElseThrow(controllerUtils.nonExistingElementMessage("question"));
         Answer answer = answerRepository.findById(checkAnswerData.getAnswerId()).orElseThrow(controllerUtils.nonExistingElementMessage("answer"));
         return qaService.findByQuestionAndAnswer(question, answer).isCorrect() == checkAnswerData.isMarked();

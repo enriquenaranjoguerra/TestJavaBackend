@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estructura Indentada</title>
+    <style>
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        .categoria {
+            font-weight: bold;
+        }
+        .bloque {
+            margin-left: 20px;
+        }
+        .tema {
+            margin-left: 40px;
+        }
+    </style>
+</head>
+<body>
+
+
+<p th:text="${message}">Texto por defecto</p>
+
+<form action="/api/questions/submit" method="post">
+    <th:block th:each="category : ${categories}">
+        <!-- Categoría (sin tabulación) -->
+        <div>
+            <input type="checkbox" th:id="'category-' + ${category.id}" th:name="categoryIds" th:value="${category.id}">
+            <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
+            
+            <!-- Mostrar descripción de la categoría si existe -->
+            <p th:if="${category.description}" th:text="${category.description}"></p>
+        </div>
+
+        <!-- Bloques (una tabulación) -->
+        <div style="margin-left: 20px;">
+            <th:block th:each="block : ${category.blocks}">
+                <input type="checkbox" th:id="'block-' + ${block.id}" th:name="blockIds" th:value="${block.id}">
+                <label th:for="'block-' + ${block.id}" th:text="${block.name}"></label>
+
+                <!-- Mostrar descripción del bloque si existe -->
+                <p th:if="${block.description}" th:text="${block.description}" style="font-style: italic;"></p>
+
+                <!-- Temas (dos tabulaciones) -->
+                <div style="margin-left: 40px;">
+                    <th:block th:each="theme : ${block.themes}">
+                        <input type="checkbox" th:id="'theme-' + ${theme.id}" th:name="themeIds" th:value="${theme.id}">
+                        <label th:for="'theme-' + ${theme.id}" th:text="${theme.name}"></label>
+
+                        <!-- Mostrar descripción del tema si existe -->
+                        <p th:if="${theme.description}" th:text="${theme.description}" style="font-size: 0.9em;"></p>
+                    </th:block>
+                </div>
+            </th:block>
+        </div>
+    </th:block>
+
+    <button type="submit">Guardar selección</button>
+</form>

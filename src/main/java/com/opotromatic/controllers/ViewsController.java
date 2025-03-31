@@ -1,60 +1,47 @@
 package com.opotromatic.controllers;
 
+import com.opotromatic.entities.Block;
+import com.opotromatic.entities.Category;
+import com.opotromatic.entities.Theme;
 import com.opotromatic.repositories.*;
 import com.opotromatic.services.ControllerUtils;
 import com.opotromatic.services.QaService;
+import com.opotromatic.services.QuestionsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Collection;
+import java.util.List;
 
 @Controller
 @RequestMapping("/api/questions")
 
 public class ViewsController {
 
-    private final CategoryRepository categoryRepository;
-    private final ThemeRepository themeRepository;
-    private final BlockRepository blockRepository;
-    private final QuestionRepository questionRepository;
-    private final AnswerRepository answerRepository;
-    private final QaService qaService;
-    private final ControllerUtils controllerUtils;
+    private final QuestionsService questionsService;
 
     public ViewsController(
-            CategoryRepository categoryRepository,
-            ThemeRepository themeRepository,
-            BlockRepository blockRepository,
-            QuestionRepository questionRepository,
-            AnswerRepository answerRepository,
-            QaService qaService,
-            ControllerUtils controllerUtils) {
-        this.categoryRepository = categoryRepository;
-        this.blockRepository = blockRepository;
-        this.themeRepository = themeRepository;
-        this.questionRepository = questionRepository;
-        this.answerRepository = answerRepository;
-        this.qaService = qaService;
-        this.controllerUtils = controllerUtils;
+            QuestionsService questionsService) {
+        this.questionsService = questionsService;
     }
 
+    @GetMapping("/listing")
+    public String listing(Model model) {
 
-    @GetMapping("/")
-    public String home() {
-        return "index";
+        List<Category> categories = questionsService.getAllCategories();
+        categories.forEach(c -> {
+            List<Block> blocks = questionsService.getBlocksByCategory(c.getId());
+            blocks.forEach(b -> {
+                List<Theme> themes = questionsService.getThemesByBlock(b.getId());
+            });
+            c.setBlocks(blocks);
+        });
+
+
+        model.addAttribute("categories", categories);
+
+        return "listing";
     }
-
-    @GetMapping("/prueba")
-    public String prueba(Model model) {
-        String message = "¡Hola desde el controlador";
-        model.addAttribute("message", message);
-        return "prueba";
-    }
-
-    @GetMapping("/Ejemplo1")
-    public String ejemplo1() {
-        return "Ejemplo1";
-    }
-
-
 }

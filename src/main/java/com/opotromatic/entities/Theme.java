@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -33,4 +36,10 @@ public class Theme {
 
     @Column(nullable = true)
     private String description;
+
+    @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Question> questions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Answer> answers = new ArrayList<>();
 }
