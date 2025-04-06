@@ -4,60 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estructura Indentada</title>
-    <style>
-        ul {
-            list-style-type: none;
-            padding-left: 20px;
-        }
-        .categoria {
-            font-weight: bold;
-        }
-        .bloque {
-            margin-left: 20px;
-        }
-        .tema {
-            margin-left: 40px;
-        }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/listing_ready.js"></script>
+    <link rel="stylesheet" href="/css/listing_style.css">
+
 </head>
 <body>
 
-
 <p th:text="${message}">Texto por defecto</p>
 
-<form action="/api/questions/submit" method="post">
-    <th:block th:each="category : ${categories}">
-        <!-- Categoría (sin tabulación) -->
-        <div>
-            <input type="checkbox" th:id="'category-' + ${category.id}" th:name="categoryIds" th:value="${category.id}">
-            <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
-            
-            <!-- Mostrar descripción de la categoría si existe -->
-            <p th:if="${category.description}" th:text="${category.description}"></p>
+<form id="questions-form">
+
+    <div th:each="category : ${categories}">
+        <h2>
+            <input type="checkbox" class="category-checkbox" th:data-id="${category.id}">
+            <span class="category" th:text="${category.name}"></span>
+        </h2>
+
+        <div style="margin-left: 20px;" th:each="block : ${category.blocks}">
+            <h3>
+                <input type="checkbox" class="block-checkbox" th:data-id="${block.id}" th:data-category-id="${category.id}">
+                <span class="block" th:text="${block.name}"></span>
+            </h3>
+
+            <div style="margin-left: 40px;" th:each="theme : ${block.themes}">
+                <input type="checkbox" class="theme-checkbox" th:data-id="${theme.id}" th:data-block-id="${block.id}" th:data-category-id="${category.id}">
+                <span class="theme" th:text="${theme.name}"></span><br>
+            </div>
+
         </div>
+    </div>
 
-        <!-- Bloques (una tabulación) -->
-        <div style="margin-left: 20px;">
-            <th:block th:each="block : ${category.blocks}">
-                <input type="checkbox" th:id="'block-' + ${block.id}" th:name="blockIds" th:value="${block.id}">
-                <label th:for="'block-' + ${block.id}" th:text="${block.name}"></label>
-
-                <!-- Mostrar descripción del bloque si existe -->
-                <p th:if="${block.description}" th:text="${block.description}" style="font-style: italic;"></p>
-
-                <!-- Temas (dos tabulaciones) -->
-                <div style="margin-left: 40px;">
-                    <th:block th:each="theme : ${block.themes}">
-                        <input type="checkbox" th:id="'theme-' + ${theme.id}" th:name="themeIds" th:value="${theme.id}">
-                        <label th:for="'theme-' + ${theme.id}" th:text="${theme.name}"></label>
-
-                        <!-- Mostrar descripción del tema si existe -->
-                        <p th:if="${theme.description}" th:text="${theme.description}" style="font-size: 0.9em;"></p>
-                    </th:block>
-                </div>
-            </th:block>
-        </div>
-    </th:block>
-
-    <button type="submit">Guardar selección</button>
 </form>
+
+<button type="submit">Buscar preguntas</button>
+
+
+
+
+</body>
+</html>

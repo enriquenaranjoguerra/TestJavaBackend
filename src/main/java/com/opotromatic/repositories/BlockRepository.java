@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface BlockRepository extends JpaRepository<Block, Long> {
 
     List<Block> findByCategory(Category category);
+    List<Block> findByCategoryIdIn(List<Long> categoryIds);
 
     Optional<Block> findByName(String name);
 

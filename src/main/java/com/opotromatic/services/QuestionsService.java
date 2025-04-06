@@ -7,6 +7,7 @@ import com.opotromatic.services.ControllerUtils;
 import com.opotromatic.services.QaService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,6 +38,27 @@ public class QuestionsService {
         this.answerRepository = answerRepository;
         this.qaService = qaService;
         this.controllerUtils = controllerUtils;
+    }
+
+    @GetMapping("questions/by_ids")
+    public List<Question> getQuestionsByIds(@RequestParam List<Long> categoryIds, @RequestParam List<Long> blockIds, @RequestParam List<Long> themeIds){
+        List<Long> allThemeIds = new ArrayList<>(themeIds);
+        List<Long> allBlocksIds = new ArrayList<>(blockIds);
+        List<Question> questions = new ArrayList<>();
+
+        if(!categoryIds.isEmpty()){
+            allBlocksIds.addAll(blockRepository.findByCategoryIdIn(categoryIds).stream().map(Block::getId).toList());
+        }
+
+        if(!themeIds.isEmpty()){
+            allThemeIds.addAll(themeRepository.findByBlockIdIn(allBlocksIds).stream().map(Theme::getId).toList());
+        }
+
+        if(allThemeIds.isEmpty()){
+            throw new RuntimeException("No questions found");
+        }
+
+        return questions;
     }
 
 

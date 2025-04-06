@@ -1,5 +1,6 @@
 package com.opotromatic.repositories;
 
+import com.opotromatic.entities.Block;
 import com.opotromatic.entities.Category;
 import com.opotromatic.entities.Question;
 import com.opotromatic.entities.Theme;
@@ -17,4 +18,5 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     Optional<Question> findWithAnswersById(Long id);
     List<Question> findByNameAndTheme(String name, Theme theme);
+
 }
