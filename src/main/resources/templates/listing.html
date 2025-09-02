@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estructura Indentada</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/listing_ready.js"></script>
+    <link rel="stylesheet" href="/css/listing_style.css">
+
+</head>
+<body>
+
+<p th:text="${message}">Texto por defecto</p>
+
+<form id="questions-form">
+
+    <div th:each="category : ${categories}">
+        <h2>
+            <input type="checkbox" class="category-checkbox" th:data-id="${category.id}">
+            <span class="category" th:text="${category.name}"></span>
+        </h2>
+
+        <div style="margin-left: 20px;" th:each="block : ${category.blocks}">
+            <h3>
+                <input type="checkbox" class="block-checkbox" th:data-id="${block.id}" th:data-category-id="${category.id}">
+                <span class="block" th:text="${block.name}"></span>
+            </h3>
+
+            <div style="margin-left: 40px;" th:each="theme : ${block.themes}">
+                <input type="checkbox" class="theme-checkbox" th:data-id="${theme.id}" th:data-block-id="${block.id}" th:data-category-id="${category.id}">
+                <span class="theme" th:text="${theme.name}"></span><br>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+<button type="submit">Buscar preguntas</button>
+
+
+
+
+</body>
+</html>

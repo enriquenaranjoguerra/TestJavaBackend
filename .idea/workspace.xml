@@ -16,9 +16,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -125,18 +125,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SpringBootBootstrapLiveTest.whenGetBooksByTitle_thenOK" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="All in TestJavaBackend" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="TestJavaBackend" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.example.Test2.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.example.Test2" />
-      <option name="MAIN_CLASS_NAME" value="com.example.Test2.SpringBootBootstrapLiveTest" />
-      <option name="METHOD_NAME" value="whenGetBooksByTitle_thenOK" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -144,13 +136,14 @@
     <list>
       <item itemvalue="Application.QuestionsApplication" />
       <item itemvalue="Application.BooksApplication" />
-      <item itemvalue="JUnit.SpringBootBootstrapLiveTest.whenGetBooksByTitle_thenOK" />
+      <item itemvalue="JUnit.All in TestJavaBackend" />
       <item itemvalue="JUnit.All in TestJavaBackend (1)" />
       <item itemvalue="JUnit.All in TestJavaBackend (2)" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.QuestionsApplication" />
+        <item itemvalue="JUnit.All in TestJavaBackend" />
         <item itemvalue="Application.BooksApplication" />
         <item itemvalue="JUnit.All in TestJavaBackend (2)" />
         <item itemvalue="JUnit.All in TestJavaBackend (1)" />

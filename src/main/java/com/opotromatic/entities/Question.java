@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Entity
 @Getter
 @Setter
@@ -29,4 +32,11 @@ public class Question {
     @ManyToOne
     @JoinColumn(name = "theme_id", nullable = false)
     private Theme theme;
+
+    @OneToMany
+    private List<QaMapping> qaMappings;
+
+    public List<Answer> getAnswers(){
+        return qaMappings.stream().map(QaMapping::getAnswer).collect(Collectors.toList());
+    }
 }
