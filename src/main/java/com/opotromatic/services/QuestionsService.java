@@ -5,14 +5,13 @@ import com.opotromatic.entities.*;
 import com.opotromatic.repositories.*;
 import com.opotromatic.services.ControllerUtils;
 import com.opotromatic.services.QaService;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/questions")
-
+@Service
 public class QuestionsService {
 
     private final CategoryRepository categoryRepository;
@@ -40,18 +39,19 @@ public class QuestionsService {
         this.controllerUtils = controllerUtils;
     }
 
-    @GetMapping("questions/by_ids")
-    public List<Question> getQuestionsByIds(@RequestParam List<Long> categoryIds, @RequestParam List<Long> blockIds, @RequestParam List<Long> themeIds){
+    public List<Question> getQuestionsByIds(List<Long> categoryIds, List<Long> blockIds, List<Long> themeIds){
         List<Long> allThemeIds = new ArrayList<>(themeIds);
         List<Long> allBlocksIds = new ArrayList<>(blockIds);
         List<Question> questions = new ArrayList<>();
 
         if(!categoryIds.isEmpty()){
-            allBlocksIds.addAll(blockRepository.findByCategoryIdIn(categoryIds).stream().map(Block::getId).toList());
+            List<Long> blocks = blockRepository.findByCategoryIdIn(categoryIds).stream().map(Block::getId).toList();
+            allBlocksIds.addAll(blocks);
         }
 
         if(!themeIds.isEmpty()){
-            allThemeIds.addAll(themeRepository.findByBlockIdIn(allBlocksIds).stream().map(Theme::getId).toList());
+            List<Long> themes = themeRepository.findByBlockIdIn(allBlocksIds).stream().map(Theme::getId).toList();
+            allThemeIds.addAll(themes);
         }
 
         if(allThemeIds.isEmpty()){
@@ -62,44 +62,37 @@ public class QuestionsService {
     }
 
 
-    @GetMapping("/category/get_all")
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
-    @GetMapping("/block/get_by_category_id/{blockId}")
     public List<Block> getBlocksByCategory(@PathVariable Long categoryId) {
         Category category = controllerUtils.findCategoryById(categoryId);
         return blockRepository.findByCategory(category);
 
     }
 
-    @GetMapping("/theme/get_by_block_id/{blockId}")
     public List<Theme> getThemesByBlock(@PathVariable Long blockId) {
         Block block = controllerUtils.findBlockById(blockId);
         return themeRepository.findByBlock(block);
     }
 
-    @GetMapping("/question/get_by_theme/{themeId}")
     public List<Question> findByTheme(@PathVariable Long themeId) {
         Theme theme = controllerUtils.findThemeById(themeId);
         return questionRepository.findByTheme(theme);
     }
 
-    @GetMapping("/answer/get_by_question_id/{questionId}")
     public List<Answer> findByQuestion(@PathVariable Long questionId) {
         Question question = questionRepository.findWithAnswersById(questionId).orElseThrow(controllerUtils.nonExistingElementMessage("question"));
         return question.getAnswers();
     }
 
-    @PostMapping("/answer/check_answer")
     public Boolean checkAnswer(@RequestBody CheckAnswerDTO checkAnswerData) {
         Question question = questionRepository.findById(checkAnswerData.getQuestionId()).orElseThrow(controllerUtils.nonExistingElementMessage("question"));
         Answer answer = answerRepository.findById(checkAnswerData.getAnswerId()).orElseThrow(controllerUtils.nonExistingElementMessage("answer"));
         return qaService.findByQuestionAndAnswer(question, answer).isCorrect() == checkAnswerData.isMarked();
     }
 
-    @GetMapping("/answer/check_several_answer")
     public List<Boolean> checkAnswer(List<CheckAnswerDTO> checkAnswerSeveralData) {
         return checkAnswerSeveralData.stream().map(this::checkAnswer).toList();
     }

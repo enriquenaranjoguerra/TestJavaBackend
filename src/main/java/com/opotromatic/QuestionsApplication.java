@@ -21,7 +21,7 @@ public class QuestionsApplication {
 //    @PostConstruct
 //    public void openBrowser(){
 //        try{
-//            Desktop.getDesktop().browse(new URI("http://localhost:8080/index"));
+//            Desktop.getDesktop().browse(new URI("http://localhost:8081"));
 //        } catch (Exception e){
 //            e.printStackTrace();
 //        }

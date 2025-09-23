@@ -4,9 +4,6 @@ import com.opotromatic.entities.Block;
 import com.opotromatic.entities.Category;
 import com.opotromatic.entities.Question;
 import com.opotromatic.entities.Theme;
-import com.opotromatic.repositories.*;
-import com.opotromatic.services.ControllerUtils;
-import com.opotromatic.services.QaService;
 import com.opotromatic.services.QuestionsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/questions")
@@ -24,8 +22,7 @@ public class ViewsController {
 
     private final QuestionsService questionsService;
 
-    public ViewsController(
-            QuestionsService questionsService) {
+    public ViewsController(QuestionsService questionsService) {
         this.questionsService = questionsService;
     }
 
@@ -49,9 +46,19 @@ public class ViewsController {
     }
 
     @GetMapping("/questions_by_ids")
-    public String getQuestionsByIds(@RequestParam List<Long> categoryIds, @RequestParam List<Long> blockIds, @RequestParam List<Long> themeIds, Model model){
+    public String getQuestionsByIds(
+            @RequestParam(required = false) List<Long> categoryIds,
+            @RequestParam(required = false) List<Long> blockIds,
+            @RequestParam(required = false) List<Long> themeIds,
+            Model model) {
         System.out.println("/questions_by_ids");
+
+        categoryIds = Optional.ofNullable(categoryIds).orElseGet(ArrayList::new);
+        blockIds = Optional.ofNullable(blockIds).orElseGet(ArrayList::new);
+
         List<Question> questions = questionsService.getQuestionsByIds(categoryIds, blockIds, themeIds);
+        questions.forEach(System.out::println);
+
         model.addAttribute("questions", questions);
         model.addAttribute("message", "Preguntas encontradas: " + questions.size());
 
