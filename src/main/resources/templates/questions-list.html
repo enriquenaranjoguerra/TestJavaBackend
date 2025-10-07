@@ -3,14 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Preguntas encontradas</title>
+    <style>
+        /* Estilos CSS simples para el espaciado y la presentación */
+        .question-container {
+            margin-bottom: 30px; /* Espacio entre preguntas */
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .question-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .answer-option {
+            margin-left: 20px;
+            display: block; /* Asegura que cada respuesta esté en una línea nueva */
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
 
 <h1 th:text="${message}"></h1>
 
-<ul>
-    <li th:each="q: ${questions}" th:text="{q.name}"></li>
-</ul>
+<div th:each="q, iterStat : ${questions}" class="question-container">
+    <div class="question-title">
+        <span th:text="${iterStat.count} + '. ' + ${q.name}">Nombre de la pregunta</span>
+    </div>
+
+    <form action="#" method="post">
+        <div th:each="answer: ${q.getAnswers()}" class="answer-option">
+            <input type="checkbox"
+                th:id="${'answer-' + q.id + '-' + answer.id}"
+                th:name="${'q' + q.id + '_answers'}"
+                th:value="${answer.id}"/>
+            <label th:for="${'answer-' + q.id + '-' + answer.id}"
+                   th:text="${answer.name}">Opción de respuesta</label>
+        </div>
+    </form>
+
+</div>
 
 <a href="/api/questions/listing">Volver</a>
 

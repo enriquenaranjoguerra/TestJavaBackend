@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,7 +15,7 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = "theme")
+@ToString(exclude = {"theme", "qaMappings"})
 @NoArgsConstructor
 public class Question {
 
@@ -33,7 +36,8 @@ public class Question {
     @JoinColumn(name = "theme_id", nullable = false)
     private Theme theme;
 
-    @OneToMany
+    @OneToMany(mappedBy = "question")
+    @BatchSize(size = 10)
     private List<QaMapping> qaMappings;
 
     public List<Answer> getAnswers(){

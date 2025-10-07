@@ -159,11 +159,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/opotromatic/services/QuestionsService.java</url>
-          <line>66</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/opotromatic/controllers/ViewsController.java</url>
           <line>61</line>
           <option name="timeStamp" value="8" />

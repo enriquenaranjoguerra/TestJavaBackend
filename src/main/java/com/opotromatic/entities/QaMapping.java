@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "question")
 @NoArgsConstructor
 public class QaMapping {
 
@@ -29,7 +31,7 @@ public class QaMapping {
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "answer_id", nullable = false)
     private Answer answer;
 
