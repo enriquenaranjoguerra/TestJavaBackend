@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class QuestionsService {
@@ -40,23 +42,27 @@ public class QuestionsService {
     }
 
     public List<Question> getQuestionsByIds(List<Long> categoryIds, List<Long> blockIds, List<Long> themeIds){
-        List<Long> allThemeIds = new ArrayList<>(themeIds);
-        List<Long> allBlocksIds = new ArrayList<>(blockIds);
-        List<Question> questions = new ArrayList<>();
+        Set<Long> allBlocksIds = new HashSet<>(blockIds);
+        Set<Long> allThemeIds = new HashSet<>(themeIds);
+        List<Question> questions;
 
         if(!categoryIds.isEmpty()){
             List<Long> blocks = blockRepository.findByCategoryIdIn(categoryIds).stream().map(Block::getId).toList();
+            blocks.forEach(System.out::println);
             allBlocksIds.addAll(blocks);
         }
 
         if(!themeIds.isEmpty()){
             List<Long> themes = themeRepository.findByBlockIdIn(allBlocksIds).stream().map(Theme::getId).toList();
+            themes.forEach(System.out::println);
             allThemeIds.addAll(themes);
         }
 
         if(allThemeIds.isEmpty()){
             throw new RuntimeException("No questions found");
         }
+
+        questions = new ArrayList<>(questionRepository.findByThemeIdIn(allThemeIds));
 
         return questions;
     }

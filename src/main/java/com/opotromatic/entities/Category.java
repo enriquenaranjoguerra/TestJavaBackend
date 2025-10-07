@@ -1,6 +1,6 @@
 package com.opotromatic.entities;
 
-        import jakarta.persistence.*;
+import jakarta.persistence.*;
         import lombok.*;
 
         import java.util.ArrayList;
@@ -9,7 +9,7 @@ package com.opotromatic.entities;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "blocks")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Category {

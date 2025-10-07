@@ -1,0 +1,14 @@
+ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+.category {
+    font-weight: bold;
+    color: red;
+}
+.block {
+    margin-left: 20px;
+}
+.theme {
+    margin-left: 40px;
+}

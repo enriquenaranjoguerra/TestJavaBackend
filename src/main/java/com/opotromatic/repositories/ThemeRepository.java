@@ -9,10 +9,11 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ThemeRepository extends JpaRepository<Theme, Long> {
 
-    List<Theme> findByBlockIdIn(List<Long> blockIds);
+    List<Theme> findByBlockIdIn(Set<Long> blockIds);
 
     List<Theme> findByBlock(Block block);
 

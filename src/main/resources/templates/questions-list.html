@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Preguntas encontradas</title>
+</head>
+<body>
+
+<h1 th:text="${message}"></h1>
+
+<ul>
+    <li th:each="q: ${questions}" th:text="{q.name}"></li>
+</ul>
+
+<a href="/api/questions/listing">Volver</a>
+
+</body>
+</html>

@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"block", "questions", "answers"})
 @NoArgsConstructor
 public class Theme {
 

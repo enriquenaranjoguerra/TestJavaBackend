@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "theme")
 @NoArgsConstructor
 public class Question {
 

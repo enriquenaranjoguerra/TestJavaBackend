@@ -10,8 +10,11 @@ import org.springframework.data.repository.CrudRepository;
 import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
+
+    List<Question> findByThemeIdIn(Set<Long> themeIds);
     List<Question> findByTheme(Theme theme);
 
     Optional<Question> findByName(String name);
