@@ -15,6 +15,19 @@
 
 <form id="questions-form" th:action="@{/api/questions/questions_by_ids}" method="get">
 
+    <p>Introduce cuántas preguntas quieres</p>
+    <input type="number" name="questionsAmount" min="1" value="10" required>
+
+    <p>Introduce cuántas respuestas quieres por pregunta:</p>
+    <select name="answersAmount" required>
+        <option value="3">3 respuestas</option>
+        <option value="4">4 respuestas</option>
+        <option value="5">5 respuestas</option>
+        <option value="6">6 respuestas</option>
+        <option value="7">7 respuestas</option>
+        <option value="8">8 respuestas</option>
+    </select>
+
     <div th:each="category : ${categories}">
         <h2>
             <input type="checkbox" class="category-checkbox" th:data-id="${category.id}" name="categoryIds" th:value="${category.id}">
@@ -38,8 +51,6 @@
     <button type="submit">Buscar preguntas</button>
 
 </form>
-
-
 
 </body>
 </html>

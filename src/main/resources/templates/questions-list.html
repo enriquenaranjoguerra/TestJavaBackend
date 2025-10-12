@@ -27,25 +27,29 @@
 </head>
 <body>
 
-<h1 th:text="${message}"></h1>
 
-<div th:each="q, iterStat : ${questions}" class="question-container">
-    <div class="question-title">
-        <span th:text="${iterStat.count} + '. ' + ${q.name}">Nombre de la pregunta</span>
-    </div>
+<form th:action="@{/api/questions/check_answers}" method="post">
 
-    <form action="#" method="post">
-        <div th:each="answer: ${q.getAnswers()}" class="answer-option">
+    <h1 th:text="${message}"></h1>
+
+    <div th:each="q, iterStat : ${questions}" class="question-container">
+        <div class="question-title">
+            <span th:text="${iterStat.count} + '. ' + ${q.name}">Nombre de la pregunta</span>
+        </div>
+
+        <div th:each="answer: ${q.getLimitedAnswers(#vars.answersAmount)}" class="answer-option">
             <input type="checkbox"
-                th:id="${'answer-' + q.id + '-' + answer.id}"
-                th:name="${'q' + q.id + '_answers'}"
-                th:value="${answer.id}"/>
+                   th:id="${'answer-' + q.id + '-' + answer.id}"
+                   th:name="${'q' + q.id + '_answers'}"  th:value="${answer.id}"/>
+
             <label th:for="${'answer-' + q.id + '-' + answer.id}"
                    th:text="${answer.name}">Opción de respuesta</label>
         </div>
-    </form>
+    </div>
 
-</div>
+    <button type="submit" style="margin-top: 20px;">Comprobar Respuestas</button>
+
+</form>
 
 <a href="/api/questions/listing">Volver</a>
 

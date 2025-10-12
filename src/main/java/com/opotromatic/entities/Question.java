@@ -9,6 +9,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,5 +43,22 @@ public class Question {
 
     public List<Answer> getAnswers(){
         return qaMappings.stream().map(QaMapping::getAnswer).collect(Collectors.toList());
+    }
+
+    public List<Answer> getLimitedAnswers(Integer limit){
+        if (limit == null || limit <= 0) {
+            limit = 4; // Valor por defecto seguro
+        }
+
+        List<Answer> allAnswers = getAnswers();
+
+        // 1. Barajar (aleatorizar) las respuestas
+        Collections.shuffle(allAnswers);
+
+        // 2. Limitar la lista
+        int maxAnswers = Math.min(limit, allAnswers.size());
+
+        // 3. Devolver la sublista limitada
+        return allAnswers.subList(0, maxAnswers);
     }
 }

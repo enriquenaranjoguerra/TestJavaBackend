@@ -42,6 +42,10 @@ public class QuestionsService {
     }
 
     public List<Question> getQuestionsByIds(List<Long> categoryIds, List<Long> blockIds, List<Long> themeIds){
+        if(categoryIds.isEmpty() && blockIds.isEmpty() && themeIds.isEmpty()){
+            throw new RuntimeException("No category, blocks or themes selected");
+        }
+
         Set<Long> allBlocksIds = new HashSet<>(blockIds);
         Set<Long> allThemeIds = new HashSet<>(themeIds);
         List<Question> questions;
