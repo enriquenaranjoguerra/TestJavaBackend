@@ -6,59 +6,47 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"theme", "qaMappings"})
+@ToString(exclude = {"theme", "answers"})
 @NoArgsConstructor
 public class Question {
 
-    public Question(String name, Theme theme){
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Lob
+    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
+    private String name;
+    @ManyToOne
+    @JoinColumn(name = "theme_id", nullable = false)
+    private Theme theme;
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @BatchSize(size = 10)
+    private List<Answer> answers;
+
+    public Question(String name, Theme theme) {
         this.name = name;
         this.theme = theme;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
-    @Lob
-    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
-    private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "theme_id", nullable = false)
-    private Theme theme;
-
-    @OneToMany(mappedBy = "question")
-    @BatchSize(size = 10)
-    private List<QaMapping> qaMappings;
-
-    public List<Answer> getAnswers(){
-        return qaMappings.stream().map(QaMapping::getAnswer).collect(Collectors.toList());
-    }
-
-    public List<Answer> getLimitedAnswers(Integer limit){
+    public List<Answer> getLimitedAnswers(Integer limit) {
         if (limit == null || limit <= 0) {
-            limit = 4; // Valor por defecto seguro
+            limit = 4;
         }
 
-        List<Answer> allAnswers = getAnswers();
+        List<Answer> allAnswers = new ArrayList<>(this.answers);
 
-        // 1. Barajar (aleatorizar) las respuestas
         Collections.shuffle(allAnswers);
 
-        // 2. Limitar la lista
         int maxAnswers = Math.min(limit, allAnswers.size());
 
-        // 3. Devolver la sublista limitada
         return allAnswers.subList(0, maxAnswers);
     }
 }

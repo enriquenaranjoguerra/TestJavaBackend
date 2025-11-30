@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"block", "questions", "answers"})
+@ToString(exclude = {"block", "questions"})
 @NoArgsConstructor
 public class Theme {
 
@@ -23,7 +23,7 @@ public class Theme {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Lob
@@ -40,6 +40,4 @@ public class Theme {
     @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Question> questions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Answer> answers = new ArrayList<>();
 }

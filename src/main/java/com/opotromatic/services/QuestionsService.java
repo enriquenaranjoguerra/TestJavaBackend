@@ -3,11 +3,11 @@ package com.opotromatic.services;
 import com.opotromatic.DTO.CheckAnswerDTO;
 import com.opotromatic.entities.*;
 import com.opotromatic.repositories.*;
-import com.opotromatic.services.ControllerUtils;
-import com.opotromatic.services.QaService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +21,6 @@ public class QuestionsService {
     private final BlockRepository blockRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
-    private final QaService qaService;
     private final ControllerUtils controllerUtils;
 
     public QuestionsService(
@@ -30,17 +29,16 @@ public class QuestionsService {
             BlockRepository blockRepository,
             QuestionRepository questionRepository,
             AnswerRepository answerRepository,
-            QaService qaService,
             ControllerUtils controllerUtils) {
         this.categoryRepository = categoryRepository;
         this.blockRepository = blockRepository;
         this.themeRepository = themeRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
-        this.qaService = qaService;
         this.controllerUtils = controllerUtils;
     }
 
+    @Transactional(readOnly = true)
     public List<Question> getQuestionsByIds(List<Long> categoryIds, List<Long> blockIds, List<Long> themeIds){
         if(categoryIds.isEmpty() && blockIds.isEmpty() && themeIds.isEmpty()){
             throw new RuntimeException("No category, blocks or themes selected");
@@ -66,7 +64,7 @@ public class QuestionsService {
             throw new RuntimeException("No questions found");
         }
 
-        questions = new ArrayList<>(questionRepository.findByThemeIdIn(allThemeIds));
+        questions = questionRepository.findByThemeIdIn(allThemeIds);
 
         return questions;
     }
@@ -98,14 +96,12 @@ public class QuestionsService {
     }
 
     public Boolean checkAnswer(@RequestBody CheckAnswerDTO checkAnswerData) {
-        Question question = questionRepository.findById(checkAnswerData.getQuestionId()).orElseThrow(controllerUtils.nonExistingElementMessage("question"));
         Answer answer = answerRepository.findById(checkAnswerData.getAnswerId()).orElseThrow(controllerUtils.nonExistingElementMessage("answer"));
-        return qaService.findByQuestionAndAnswer(question, answer).isCorrect() == checkAnswerData.isMarked();
+        return answer.isCorrect() == checkAnswerData.isMarked();
     }
 
     public List<Boolean> checkAnswer(List<CheckAnswerDTO> checkAnswerSeveralData) {
         return checkAnswerSeveralData.stream().map(this::checkAnswer).toList();
     }
-
 
 }

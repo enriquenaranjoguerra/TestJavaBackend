@@ -25,6 +25,10 @@ public class ViewsController {
         this.questionsService = questionsService;
     }
 
+    private void addCommonAttributes(Model model) {
+        model.addAttribute("homeUrl", "/");
+    }
+
     @GetMapping("/listing")
     public String listing(Model model) {
 
@@ -37,7 +41,7 @@ public class ViewsController {
             c.setBlocks(blocks);
         });
 
-
+        addCommonAttributes(model);
         model.addAttribute("categories", categories);
         model.addAttribute("message", "Selecciona una categoría");
 
@@ -64,6 +68,7 @@ public class ViewsController {
 
         questions = questions.subList(0, maxQuestions);
 
+        addCommonAttributes(model);
         model.addAttribute("questions", questions);
         model.addAttribute("message", "Preguntas encontradas: " + questions.size());
         model.addAttribute("answersAmount", answersAmount);
@@ -74,22 +79,13 @@ public class ViewsController {
     @PostMapping("/check_answers")
     public String checkAnswers(@RequestParam Map<String, String> formParams, Model model){
 
-        // El mapa 'formParams' contendrá todos los campos del formulario.
-        // Los checkboxes marcados aparecerán con su 'name' (ej. "q1_answers")
-        // y su 'value' (ej. "5,6" si se marcaron las respuestas 5 y 6).
+//        formParams.forEach((key, value) -> {
+//            if (key.endsWith("_answers")) {
+//                System.out.println("Pregunta " + key + ": Respuestas marcadas: " + value);
+//            }
+//        });
 
-        System.out.println("Formulario de respuestas recibido. Parámetros:");
-        formParams.forEach((key, value) -> {
-            // Solo procesamos los parámetros que representan las respuestas
-            if (key.endsWith("_answers")) {
-                // key será "q{ID}_answers" y value será una cadena de IDs de respuestas (ej. "5,6")
-                System.out.println("Pregunta " + key + ": Respuestas marcadas: " + value);
-
-                // Aquí se llama a la lógica de servicio para comprobar las respuestas
-                // Ejemplo: questionsService.checkAnswer(key, value);
-            }
-        });
-
+        addCommonAttributes(model);
         model.addAttribute("message", "Respuestas comprobadas con éxito.");
 
         return "check-answers";

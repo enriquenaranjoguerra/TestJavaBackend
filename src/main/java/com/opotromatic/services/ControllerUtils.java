@@ -16,23 +16,14 @@ public class ControllerUtils {
     private final CategoryRepository categoryRepository;
     private final ThemeRepository themeRepository;
     private final BlockRepository blockRepository;
-    private final QuestionRepository questionRepository;
-    private final AnswerRepository answerRepository;
-    private final QaService qaService;
 
     public ControllerUtils(
             CategoryRepository categoryRepository,
             ThemeRepository themeRepository,
-            BlockRepository blockRepository,
-            QuestionRepository questionRepository,
-            AnswerRepository answerRepository,
-            QaService qaService) {
+            BlockRepository blockRepository) {
         this.categoryRepository = categoryRepository;
         this.blockRepository = blockRepository;
         this.themeRepository = themeRepository;
-        this.questionRepository = questionRepository;
-        this.answerRepository = answerRepository;
-        this.qaService = qaService;
     }
 
     public Supplier<ResponseStatusException> nonExistingElementMessage(String element) {

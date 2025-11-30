@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="'Preguntas de: ' + ${theme.name}"></title>
+  <link rel="stylesheet" th:href="@{/css/common-styles.css}">
+  <link rel="stylesheet" th:href="@{/css/edit-styles.css}">
+  <script th:src="@{/js/confirm-delete.js}"></script>
+</head>
+<body>
+
+<div class="top-bar" style="display: flex; justify-content: space-between; align-items: center;">
+  <h2 th:text="'Preguntas del Tema: ' + ${theme.name}"></h2>
+  <a th:href="${homeUrl}" class="button-link" style="padding: 8px 15px; font-size: 0.9em; background-color: #6c757d;">Volver al Inicio</a>
+</div>
+
+<div class="main-container">
+
+  <div class="nav-links">
+    <a th:href="@{/api/manage/config}">Inicio Configuración</a>
+    <span>&gt;</span>
+    <a th:href="@{/api/manage/category/{id}(id=${theme.block.category.id})}" th:text="${theme.block.category.name}">Categoría</a>
+    <span>&gt;</span>
+    <a th:href="@{/api/manage/block/{id}(id=${theme.block.id})}" th:text="${theme.block.name}">Bloque</a>
+    <span>&gt;</span>
+    <span th:text="${theme.name}">Tema</span> </div>
+
+  <div th:if="${message}" class="alert-message">
+    <p th:text="${message}"></p>
+  </div>
+
+  <div class="list-container">
+    <h3>Añadir Nueva Pregunta</h3>
+    <form th:action="@{/api/manage/question/create}" method="post" class="edit-form">
+      <input type="hidden" name="themeId" th:value="${theme.id}">
+      <label>Enunciado:</label>
+      <input type="text" name="name" required style="flex-grow: 1; max-width: 60%;">
+      <button type="submit" class="button-small button-save">Crear Pregunta</button>
+    </form>
+  </div>
+
+  <div class="list-container">
+    <h3>Listado de Preguntas</h3>
+    <div th:if="${#lists.isEmpty(questions)}">
+      <p>No hay preguntas en este tema todavía.</p>
+    </div>
+
+    <div th:each="question : ${questions}" class="edit-item">
+
+      <div class="item-display">
+        <a th:href="@{/api/manage/question/{id}(id=${question.id})}" th:text="${question.name}" style="font-weight: bold; flex-grow: 1;">
+          Pregunta de Ejemplo
+        </a>
+
+        <button
+                th:attr="onclick='document.getElementById(\'edit-form-question-' + ${question.id} + '\').classList.toggle(\'hidden\')'"
+                class="button-small button-edit"
+                style="margin-left: 10px;">
+          Editar
+        </button>
+
+        <button type="submit"
+                class="button-small button-delete"
+                th:attr="form='delete-question-form-' + ${question.id}"
+                th:data-question-name="${question.name}"
+                onclick="return confirm('¿Estás seguro de que deseas eliminar la pregunta ' + this.getAttribute('data-question-name') + '? Esto es irreversible y eliminará también las respuestas asociadas.');"
+                style="margin-left: 5px;">
+          Eliminar
+        </button>
+      </div>
+
+      <form th:id="'edit-form-question-' + ${question.id}"
+            th:action="@{/api/manage/question/update}"
+            method="post"
+            class="hidden edit-form"
+            style="flex-direction: row; flex-wrap: wrap; gap: 5px;">
+
+        <input type="hidden" name="id" th:value="${question.id}">
+
+        <label>Enunciado:</label>
+        <input type="text"
+               name="name"
+               th:value="${question.name}"
+               required
+               style="flex-grow: 1; max-width: 60%;">
+
+        <button type="submit" class="button-small button-save">Guardar</button>
+      </form>
+    </div>
+
+    <div style="display:none;" th:each="question : ${questions}">
+      <form th:id="'delete-question-form-' + ${question.id}"
+            th:action="@{/api/manage/question/delete/{id}(id=${question.id})}"
+            method="post">
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

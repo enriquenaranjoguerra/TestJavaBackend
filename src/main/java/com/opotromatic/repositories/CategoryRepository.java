@@ -13,6 +13,4 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByName(String name);
     Optional<Category> findById(long id);
 
-//    @EntityGraph(attributePaths = {"blocks", "blocks.themes", "blocks.themes.questions", "blocks.themes.answers"})
-//    List<Category> findAllWithFullHierarchy();
 }

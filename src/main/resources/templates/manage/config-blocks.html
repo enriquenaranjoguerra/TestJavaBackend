@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Bloques de: ' + ${category.name}"></title>
+    <link rel="stylesheet" th:href="@{/css/common-styles.css}">
+    <link rel="stylesheet" th:href="@{/css/edit-styles.css}">
+</head>
+<body>
+
+<div class="top-bar">
+    <h2 th:text="'Bloques de la Categoría: ' + ${category.name}"></h2>
+    <a th:href="${homeUrl}" class="button-link">Volver al Inicio</a>
+</div>
+
+<div class="main-container">
+
+    <div class="nav-links">
+        <a th:href="@{/api/manage/config}">Inicio Configuración</a>
+        <span>&gt;</span>
+        <span th:text="${category.name}">Categoría</span>
+    </div>
+
+    <div th:if="${message}" class="alert-message">
+        <p th:text="${message}"></p>
+    </div>
+    <div th:if="${error}" class="alert-error">
+        <p th:text="${error}"></p>
+    </div>
+
+    <div class="list-container">
+        <h3>Añadir Nuevo Bloque</h3>
+        <form th:action="@{/api/manage/block/create}" method="post" class="edit-form" style="background-color: transparent;">
+            <input type="hidden" name="categoryId" th:value="${category.id}">
+
+            <label>Nombre:</label>
+            <input type="text" name="name" required style="max-width: 40%;">
+
+            <label>Descripción:</label>
+            <input type="text" name="description" style="max-width: 40%;">
+
+            <button type="submit" class="button-small button-action">Crear Bloque</button>
+        </form>
+    </div>
+
+    <div class="list-container">
+        <h3>Listado de Bloques</h3>
+        <div th:if="${#lists.isEmpty(blocks)}">
+            <p>No hay bloques en esta categoría todavía.</p>
+        </div>
+
+        <div th:each="block : ${blocks}" class="edit-item">
+
+            <div class="item-display">
+                <div style="flex-grow: 1; display: flex; flex-direction: column;">
+                    <a th:href="@{/api/manage/block/{id}(id=${block.id})}" th:text="${block.name}" style="font-weight: bold;">
+                        Bloque de Ejemplo
+                    </a>
+                    <span style="font-size: 0.9em; color: #6c757d;" th:text="${block.description}"></span>
+                </div>
+
+                <button
+                        th:attr="onclick='document.getElementById(\'edit-form-block-' + ${block.id} + '\').classList.toggle(\'hidden\')'"
+                        class="button-small button-edit">
+                    Editar
+                </button>
+
+                <button type="submit"
+                        class="button-small button-delete"
+                        th:attr="form='delete-block-form-' + ${block.id}"
+                        th:data-block-name="${block.name}"
+                        onclick="return confirm('¿Estás seguro de que deseas eliminar el bloque ' + this.getAttribute('data-block-name') + '? Esto es irreversible.');"
+                        style="margin-left: 5px;">
+                    Eliminar
+                </button>
+            </div>
+
+            <form th:id="'edit-form-block-' + ${block.id}"
+                  th:action="@{/api/manage/block/update}"
+                  method="post"
+                  class="hidden edit-form"
+                  style="flex-direction: row; flex-wrap: wrap; gap: 5px;">
+
+                <input type="hidden" name="id" th:value="${block.id}">
+
+                <label>Nombre:</label>
+                <input type="text"
+                       name="name"
+                       th:value="${block.name}"
+                       required
+                       style="max-width: 25%;">
+
+                <label>Descripción:</label>
+                <input type="text"
+                       name="description"
+                       th:value="${block.description}"
+                       style="max-width: 35%;">
+
+                <button type="submit" class="button-small button-save">Guardar</button>
+            </form>
+
+            <div style="display:none;">
+                <form th:id="'delete-block-form-' + ${block.id}"
+                      th:action="@{/api/manage/block/delete/{id}(id=${block.id})}"
+                      method="post">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
