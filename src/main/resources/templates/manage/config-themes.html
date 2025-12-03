@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="'Temas de: ' + ${block.name}"></title>
+  <link rel="stylesheet" th:href="@{/css/common-styles.css}">
+  <link rel="stylesheet" th:href="@{/css/edit-styles.css}">
+  <script th:src="@{/js/confirm-delete.js}"></script>
+</head>
+<body>
+
+<div class="top-bar">
+  <h2 th:text="'Temas del Bloque: ' + ${block.name}"></h2>
+  <a th:href="${homeUrl}" class="button-link">Volver al Inicio</a>
+</div>
+
+<div class="main-container">
+
+  <!-- Navegación Jerárquica -->
+  <div class="nav-links">
+    <a th:href="@{/api/manage/config}">Inicio Configuración</a>
+    <span>&gt;</span>
+    <a th:href="@{/api/manage/category/{id}(id=${block.category.id})}" th:text="${block.category.name}">Categoría</a>
+    <span>&gt;</span>
+    <a th:href="@{/api/manage/block/{id}(id=${block.id})}" th:text="${block.name}">Bloque</a>
+  </div>
+
+  <!-- Mensaje Flash de Actualización (opcional) -->
+  <div th:if="${message}" class="alert-message">
+    <p th:text="${message}"></p>
+  </div>
+
+  <!-- Formulario: Nuevo Tema -->
+  <div class="list-container">
+    <h3>Añadir Nuevo Tema</h3>
+    <form th:action="@{/api/manage/theme/create}" method="post">
+      <input type="hidden" name="blockId" th:value="${block.id}">
+      <label>Nombre:</label>
+      <input type="text" name="name" required style="width: 50%;">
+      <br>
+      <br>
+      <label>Descripción:</label>
+      <input type="text" name="description" style="width: 50%;">
+      <br>
+      <br>
+      <button type="submit">Crear Tema</button>
+    </form>
+  </div>
+
+  <!-- Listado de Temas -->
+  <div class="list-container">
+    <h3>Listado de Temas</h3>
+    <div th:if="${#lists.isEmpty(themes)}">
+      <p>No hay temas en este bloque todavía.</p>
+    </div>
+
+    <div th:each="theme : ${themes}" class="edit-item">
+
+      <div class="item-display">
+        <div style="flex-grow: 1; display: flex; flex-direction: column;">
+          <a th:href="@{/api/manage/theme/{id}(id=${theme.id})}" th:text="${theme.name}" style="font-weight: bold;">
+            Tema de Ejemplo
+          </a>
+          <span style="font-size: 0.9em; color: #6c757d;" th:text="${theme.description}"></span>
+        </div>
+
+        <button
+                th:attr="onclick='document.getElementById(\'edit-form-theme-' + ${theme.id} + '\').classList.toggle(\'hidden\')'"
+                class="button-small button-edit"
+                style="margin-left: 10px;">
+          Editar
+        </button>
+
+        <button type="submit"
+                class="button-small button-delete"
+                th:attr="form='delete-theme-form-' + ${theme.id}"
+                th:data-theme-name="${theme.name}"
+                onclick="return confirm('¿Estás seguro de que deseas eliminar el tema ' + this.getAttribute('data-theme-name') + '? Esto es irreversible y eliminará también sus preguntas y respuestas asociadas.');"
+                style="margin-left: 5px;">
+          Eliminar
+        </button>
+      </div>
+
+      <form th:id="'edit-form-theme-' + ${theme.id}"
+            th:action="@{/api/manage/theme/update}"
+            method="post"
+            class="hidden edit-form"
+            style="flex-direction: row; flex-wrap: wrap; gap: 5px;">
+
+        <input type="hidden" name="id" th:value="${theme.id}">
+
+        <label>Nombre:</label>
+        <input type="text"
+               name="name"
+               th:value="${theme.name}"
+               required
+               style="max-width: 25%;">
+
+        <label>Descripción:</label>
+        <input type="text"
+               name="description"
+               th:value="${theme.description}"
+               style="max-width: 35%;">
+
+        <button type="submit" class="button-small button-save">Guardar</button>
+      </form>
+    </div>
+
+    <div style="display:none;" th:each="theme : ${themes}">
+      <form th:id="'delete-theme-form-' + ${theme.id}"
+            th:action="@{/api/manage/theme/delete/{id}(id=${theme.id})}"
+            method="post">
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

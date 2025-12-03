@@ -3,43 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estructura Indentada</title>
+    <title>Selección de Test</title>
+    <!-- Usamos los estilos comunes -->
+    <link rel="stylesheet" th:href="@{/css/common-styles.css}">
+    <!-- El script se mantiene si es necesario, pero solo lo que ya existía -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/js/listing_ready.js"></script>
-    <link rel="stylesheet" href="/css/listing_style.css">
-
+    <script th:src="@{/js/listing_ready.js}"></script>
 </head>
 <body>
 
-<p th:text="${message}">Texto por defecto</p>
+<div class="top-bar">
+    <h2>Configuración del Test</h2>
+    <a th:href="${homeUrl}" class="button-link">Volver al Inicio</a>
+</div>
 
-<form id="questions-form" th:action="@{/api/questions/questions_by_ids}" method="get">
+<div class="main-container">
+    <p class="alert-message" th:text="${message}"></p>
 
-    <div th:each="category : ${categories}">
-        <h2>
-            <input type="checkbox" class="category-checkbox" th:data-id="${category.id}" name="categoryIds" th:value="${category.id}">
-            <span class="category" th:text="${category.name}"></span>
-        </h2>
+    <form id="questions-form" th:action="@{/api/questions/questions_by_ids}" method="get">
 
-        <div style="margin-left: 20px;" th:each="block : ${category.blocks}">
-            <h3>
-                <input type="checkbox" class="block-checkbox" th:data-id="${block.id}" th:data-category-id="${category.id}" name="blockIds" th:value="${block.id}">
-                <span class="block" th:text="${block.name}"></span>
-            </h3>
+        <div class="selection-area">
+            <h3 class="selection-title">Opciones del Test:</h3>
 
-            <div style="margin-left: 40px;" th:each="theme : ${block.themes}">
-                <input type="checkbox" class="theme-checkbox" th:data-id="${theme.id}" th:data-block-id="${block.id}" th:data-category-id="${category.id}" name="themeIds" th:value="${theme.id}">
-                <span class="theme" th:text="${theme.name}"></span><br>
+            <p>Introduce cuántas preguntas quieres:</p>
+            <input type="number" name="questionsAmount" min="1" value="10" required>
+
+            <p>Introduce cuántas respuestas quieres por pregunta:</p>
+            <select name="answersAmount" required>
+                <option value="4">4 respuestas</option>
+                <option value="5">5 respuestas</option>
+                <option value="6">6 respuestas</option>
+                <option value="7">7 respuestas</option>
+                <option value="8">8 respuestas</option>
+            </select>
+        </div>
+
+        <h3 class="selection-title">Selección de Contenido:</h3>
+
+        <div th:each="category : ${categories}" class="category-group">
+            <div class="selection-level">
+                <h2>
+                    <input type="checkbox" class="category-checkbox" th:data-id="${category.id}" name="categoryIds" th:value="${category.id}">
+                    <span class="category" th:text="${category.name}"></span>
+                </h2>
             </div>
 
+            <div style="margin-left: 20px;" th:each="block : ${category.blocks}" class="block-group">
+                <div class="selection-level">
+                    <h3>
+                        <input type="checkbox" class="block-checkbox" th:data-id="${block.id}" th:data-category-id="${category.id}" name="blockIds" th:value="${block.id}">
+                        <span class="block" th:text="${block.name}"></span>
+                    </h3>
+                </div>
+
+                <div style="margin-left: 20px;" th:each="theme : ${block.themes}" class="theme-selection">
+                    <input type="checkbox" class="theme-checkbox" th:data-id="${theme.id}" th:data-block-id="${block.id}" th:data-category-id="${category.id}" name="themeIds" th:value="${theme.id}">
+                    <span class="theme" th:text="${theme.name}"></span>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <button type="submit">Buscar preguntas</button>
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="submit">Buscar y Comenzar Preguntas</button>
+        </div>
 
-</form>
+    </form>
 
-
+</div>
 
 </body>
 </html>

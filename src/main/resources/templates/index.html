@@ -2,11 +2,52 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Página de Inicio</title>
+  <meta charset="UTF-8">
+  <!-- Enlace al archivo de estilos común -->
+  <link rel="stylesheet" th:href="@{/css/common-styles.css}">
+  <style>
+      /* Estilos específicos para la página de inicio */
+      .home-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          min-height: 80vh; /* Asegura que el contenido esté centrado verticalmente en la página */
+      }
+      .button-link {
+          display: inline-block;
+          margin: 10px;
+          padding: 15px 30px;
+          text-decoration: none;
+          background-color: #007bff;
+          color: white;
+          border-radius: 8px;
+          font-size: 1.2em;
+          transition: background-color 0.3s, transform 0.1s;
+      }
+      .button-link:hover {
+          background-color: #0056b3;
+          transform: translateY(-2px);
+      }
+      h1 {
+          color: #343a40;
+          margin-bottom: 20px;
+      }
+      p {
+          color: #6c757d;
+          margin-bottom: 40px;
+          font-size: 1.1em;
+      }
+  </style>
 </head>
 <body>
-<h1>Bienvenido al Opotromatic 3000</h1>
-<p>Haz clic para acceder a la aplicación.</p>
+<div class="main-container home-container">
+  <h1>Bienvenido al Opotromatic 3000</h1>
+  <p>Haz clic para acceder a la aplicación.</p>
 
-<a href="/api/questions/listing" class="button-link">Listado</a>
+  <a href="/api/questions/listing" class="button-link">Comenzar Test</a>
+  <a href="/api/manage/config" class="button-link">Configuración</a>
+</div>
 </body>
 </html>

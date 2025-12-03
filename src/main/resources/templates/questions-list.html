@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Preguntas encontradas</title>
+    <!-- Usamos los estilos comunes -->
+    <link rel="stylesheet" th:href="@{/css/common-styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/check-answers.js}"></script>
+</head>
+<body>
+
+<div class="top-bar">
+    <h2>Test en Curso</h2>
+    <a th:href="${homeUrl}" class="button-link">Volver al Inicio</a>
+</div>
+
+<div class="main-container">
+
+    <div id="results-summary" style="display: none;"></div>
+
+    <h1 th:text="${message}" style="margin-bottom: 30px; color: #007bff;"></h1>
+
+    <div id="questions-container">
+        <div th:each="q, iterStat : ${questions}" class="test-container">
+            <div class="test-question-title">
+                <span th:text="${iterStat.count} + '. ' + ${q.name}">Nombre de la pregunta</span>
+            </div>
+
+            <div th:each="answer: ${q.getLimitedAnswers(#vars.answersAmount)}" class="test-answer-option">
+                <input type="checkbox"
+                       th:id="${'answer-' + q.id + '-' + answer.id}"
+                       th:value="${answer.id}"
+                       th:data-correct="${answer.correct}"/>
+                <label th:for="${'answer-' + q.id + '-' + answer.id}"
+                       th:text="${answer.name}">
+                    Texto de la respuesta
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+        <button type="button" id="check-answers-btn" class="btn-update" style="font-size: 1.1em; padding: 12px 25px;">Comprobar Respuestas</button>
+    </div>
+
+    <div style="text-align: center;">
+        <a th:href="@{/api/questions/listing}" class="nav-links">Volver a la selección de Test</a>
+    </div>
+
+</div>
+
+</body>
+</html>

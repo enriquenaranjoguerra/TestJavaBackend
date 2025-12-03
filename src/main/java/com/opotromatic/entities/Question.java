@@ -5,38 +5,48 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"theme", "answers"})
 @NoArgsConstructor
 public class Question {
 
-    public Question(String name, Theme theme){
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Lob
+    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
+    private String name;
+    @ManyToOne
+    @JoinColumn(name = "theme_id", nullable = false)
+    private Theme theme;
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @BatchSize(size = 10)
+    private List<Answer> answers;
+
+    public Question(String name, Theme theme) {
         this.name = name;
         this.theme = theme;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    public List<Answer> getLimitedAnswers(Integer limit) {
+        if (limit == null || limit <= 0) {
+            limit = 4;
+        }
 
-    @Lob
-    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
-    private String name;
+        List<Answer> allAnswers = new ArrayList<>(this.answers);
 
-    @ManyToOne
-    @JoinColumn(name = "theme_id", nullable = false)
-    private Theme theme;
+        Collections.shuffle(allAnswers);
 
-    @OneToMany
-    private List<QaMapping> qaMappings;
+        int maxAnswers = Math.min(limit, allAnswers.size());
 
-    public List<Answer> getAnswers(){
-        return qaMappings.stream().map(QaMapping::getAnswer).collect(Collectors.toList());
+        return allAnswers.subList(0, maxAnswers);
     }
 }

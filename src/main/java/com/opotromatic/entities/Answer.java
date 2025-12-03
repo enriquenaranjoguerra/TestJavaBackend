@@ -13,23 +13,27 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Answer {
 
-    public Answer(String name, Theme theme, String explanation) {
+    public Answer(String name, Question question, String explanation, boolean correct) {
         this.name = name;
-        this.theme = theme;
+        this.question = question;
         this.explanation = explanation;
+        this.correct = correct;
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Lob
-    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "theme_id", nullable = false)
-    private Theme theme;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
+
+    @Column(nullable = false)
+    boolean correct;
 
     @Column(nullable = true)
     private String explanation;

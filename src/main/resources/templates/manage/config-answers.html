@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title th:text="'Respuestas de: ' + ${question.name}"></title>
+  <!-- Enlace a los estilos comunes -->
+  <link rel="stylesheet" th:href="@{/css/common-styles.css}">
+  <link rel="stylesheet" th:href="@{/css/edit-styles.css}">
+</head>
+
+<body>
+
+  <div class="top-bar">
+    <h2 th:text="'Configuración de Respuestas'"></h2>
+    <a th:href="${homeUrl}" class="button-link">Volver al Inicio</a>
+  </div>
+
+  <div class="main-container">
+
+    <!-- Navegación Jerárquica -->
+    <div class="nav-links">
+      <a th:href="@{/api/manage/config}">Inicio Configuración</a>
+      <span>&gt;</span>
+      <a th:href="@{/api/manage/category/{id}(id=${question.theme.block.category.id})}"
+        th:text="${question.theme.block.category.name}">Categoría</a>
+      <span>&gt;</span>
+      <a th:href="@{/api/manage/block/{id}(id=${question.theme.block.id})}"
+        th:text="${question.theme.block.name}">Bloque</a>
+      <span>&gt;</span>
+      <a th:href="@{/api/manage/theme/{id}(id=${question.theme.id})}" th:text="${question.theme.name}">Tema</a>
+      <span>&gt;</span>
+      <a th:href="@{/api/manage/question/{id}(id=${question.id})}" th:text="${question.name}">Pregunta</a>
+    </div>
+
+    <!-- Mensaje Flash de Actualización (opcional) -->
+    <div th:if="${message}" class="alert-message">
+      <p th:text="${message}"></p>
+    </div>
+    <div th:if="${error}" class="alert-message alert-error">
+      <p th:text="${error}"></p>
+    </div>
+
+    <div class="question-title" th:text="'Pregunta: ' + ${question.name}"></div>
+
+    <!-- FORMULARIO MASIVO DE ACTUALIZACIÓN (Puro Thymeleaf) -->
+    <form th:action="@{/api/manage/answers/update-bulk}" th:object="${answersForm}" method="post">
+
+      <!-- Botón de Actualizar al principio de la lista -->
+      <div style="margin-bottom: 20px; text-align: right;">
+        <button type="submit" class="btn-update">
+          Actualizar Configuración
+        </button>
+      </div>
+
+      <h4 style="margin-top: 0;">Respuestas Existentes:</h4>
+
+      <div th:if="${#lists.isEmpty(answersForm.answers)}">
+        <p>No hay respuestas para esta pregunta todavía.</p>
+      </div>
+
+      <!-- Listado de Respuestas Existentes -->
+      <div th:each="answer, stat : ${answers}" class="answer-row">
+
+        <div class="answer-content">
+          <!-- 1. Campo Oculto para el ID -->
+          <input type="hidden" th:field="*{answers[__${stat.index}__].id}">
+
+          <!-- 2. Checkbox para 'correct' -->
+          <input type="checkbox" th:field="*{answers[__${stat.index}__].correct}" class="correct-check"
+            title="Marcar si es correcta">
+
+          <!-- 3. Texto visible de la respuesta (usamos el objeto Answer del bucle) -->
+          <span style="font-size: 1.1em;" th:text="${answer.name}"></span>
+        </div>
+
+        <!-- BOTÓN DE ELIMINACIÓN (Vinculado a formulario externo) -->
+        <button type="submit" class="btn-delete" th:attr="form='delete-form-' + ${answer.id}"
+          onclick="return confirm('¿Estás seguro de que deseas eliminar esta respuesta? Esto es irreversible.')">
+          Eliminar
+        </button>
+      </div>
+
+      <!-- Botón de Actualizar al final de la lista -->
+      <div style="margin-top: 20px; text-align: right;">
+        <button type="submit" class="btn-update">
+          Actualizar Configuración
+        </button>
+      </div>
+    </form>
+    <!-- FIN DEL FORMULARIO MASIVO -->
+
+    <!-- Formularios de eliminación ocultos (para evitar anidamiento) -->
+    <div th:each="answer : ${answers}" style="display:none;">
+      <form th:id="'delete-form-' + ${answer.id}" th:action="@{/api/manage/answer/delete/{id}(id=${answer.id})}"
+        method="post">
+        <input type="hidden" name="_method" value="delete" />
+      </form>
+    </div>
+
+    <!-- Formulario: Nueva Respuesta -->
+    <div class="new-answer-form">
+      <strong>Añadir Nueva Respuesta:</strong>
+      <form th:action="@{/api/manage/answer/create}" method="post"
+        style="display: block; width: 100%; margin-top: 10px;">
+        <input type="hidden" name="questionId" th:value="${question.id}">
+
+        <input type="text" name="name" placeholder="Texto de la respuesta" required style="width: 50%;">
+
+        <label style="margin-left: 10px;">
+          <input type="checkbox" name="correct" value="true"> ¿Es Correcta?
+        </label>
+
+        <button type="submit" style="margin-left: 10px;">Crear Respuesta</button>
+      </form>
+    </div>
+  </div>
+
+</body>
+
+</html>

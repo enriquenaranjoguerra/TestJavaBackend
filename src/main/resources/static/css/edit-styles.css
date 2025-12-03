@@ -1,0 +1,67 @@
+/* Utilidad para ocultar elementos (CRÍTICO para formularios de edición) */
+.hidden {
+    display: none !important;
+}
+
+/* Contenedor del elemento individual (para permitir diseño en columna) */
+.edit-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+/* Fila visible que contiene el enlace de navegación y el botón de editar */
+.item-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Estilos del formulario de edición oculto */
+.edit-form {
+    margin-top: 10px;
+    padding-top: 5px;
+    border-top: 1px dashed #eee;
+    display: flex; /* Para alinear el input y el botón de guardar */
+    align-items: center;
+    gap: 10px;
+}
+
+.edit-form label {
+    font-weight: bold;
+    margin-right: 5px;
+    white-space: nowrap; /* Evita que el label salte de línea */
+}
+
+.edit-form input[type="text"], .edit-form textarea {
+    flex-grow: 1; /* Ocupa el espacio disponible */
+    padding: 5px;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    box-sizing: border-box;
+    max-width: 70%;
+}
+
+/* Botones pequeños para acciones dentro de la lista (Editar/Guardar) */
+.button-small {
+    padding: 5px 10px;
+    font-size: 0.8em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button-edit {
+    background-color: #ffc107; /* Amarillo para editar */
+    color: #333;
+}
+
+.button-save {
+    background-color: #28a745; /* Verde para guardar */
+    color: white;
+}

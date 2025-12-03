@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"category", "themes"})
 @AllArgsConstructor
 @NoArgsConstructor
 public class Block {
@@ -21,7 +21,7 @@ public class Block {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Lob

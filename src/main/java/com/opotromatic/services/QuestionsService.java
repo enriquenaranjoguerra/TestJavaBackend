@@ -3,13 +3,15 @@ package com.opotromatic.services;
 import com.opotromatic.DTO.CheckAnswerDTO;
 import com.opotromatic.entities.*;
 import com.opotromatic.repositories.*;
-import com.opotromatic.services.ControllerUtils;
-import com.opotromatic.services.QaService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.beans.Transient;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class QuestionsService {
@@ -19,7 +21,6 @@ public class QuestionsService {
     private final BlockRepository blockRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
-    private final QaService qaService;
     private final ControllerUtils controllerUtils;
 
     public QuestionsService(
@@ -28,35 +29,42 @@ public class QuestionsService {
             BlockRepository blockRepository,
             QuestionRepository questionRepository,
             AnswerRepository answerRepository,
-            QaService qaService,
             ControllerUtils controllerUtils) {
         this.categoryRepository = categoryRepository;
         this.blockRepository = blockRepository;
         this.themeRepository = themeRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
-        this.qaService = qaService;
         this.controllerUtils = controllerUtils;
     }
 
+    @Transactional(readOnly = true)
     public List<Question> getQuestionsByIds(List<Long> categoryIds, List<Long> blockIds, List<Long> themeIds){
-        List<Long> allThemeIds = new ArrayList<>(themeIds);
-        List<Long> allBlocksIds = new ArrayList<>(blockIds);
-        List<Question> questions = new ArrayList<>();
+        if(categoryIds.isEmpty() && blockIds.isEmpty() && themeIds.isEmpty()){
+            throw new RuntimeException("No category, blocks or themes selected");
+        }
+
+        Set<Long> allBlocksIds = new HashSet<>(blockIds);
+        Set<Long> allThemeIds = new HashSet<>(themeIds);
+        List<Question> questions;
 
         if(!categoryIds.isEmpty()){
             List<Long> blocks = blockRepository.findByCategoryIdIn(categoryIds).stream().map(Block::getId).toList();
+            blocks.forEach(System.out::println);
             allBlocksIds.addAll(blocks);
         }
 
         if(!themeIds.isEmpty()){
             List<Long> themes = themeRepository.findByBlockIdIn(allBlocksIds).stream().map(Theme::getId).toList();
+            themes.forEach(System.out::println);
             allThemeIds.addAll(themes);
         }
 
         if(allThemeIds.isEmpty()){
             throw new RuntimeException("No questions found");
         }
+
+        questions = questionRepository.findByThemeIdIn(allThemeIds);
 
         return questions;
     }
@@ -88,14 +96,12 @@ public class QuestionsService {
     }
 
     public Boolean checkAnswer(@RequestBody CheckAnswerDTO checkAnswerData) {
-        Question question = questionRepository.findById(checkAnswerData.getQuestionId()).orElseThrow(controllerUtils.nonExistingElementMessage("question"));
         Answer answer = answerRepository.findById(checkAnswerData.getAnswerId()).orElseThrow(controllerUtils.nonExistingElementMessage("answer"));
-        return qaService.findByQuestionAndAnswer(question, answer).isCorrect() == checkAnswerData.isMarked();
+        return answer.isCorrect() == checkAnswerData.isMarked();
     }
 
     public List<Boolean> checkAnswer(List<CheckAnswerDTO> checkAnswerSeveralData) {
         return checkAnswerSeveralData.stream().map(this::checkAnswer).toList();
     }
-
 
 }
