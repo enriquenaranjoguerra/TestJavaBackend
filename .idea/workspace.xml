@@ -38,7 +38,6 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2jxGeEz9AvYOLLevAQTRW9Xnjxp" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -92,7 +91,7 @@
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.opotromatic.QuestionsApplication" />
-      <module name="TestJavaBackend" />
+      <module name="Test2" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.opotromatic.*" />
@@ -165,7 +164,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/opotromatic/controllers/ViewsController.java</url>
-          <line>58</line>
+          <line>65</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
