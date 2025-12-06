@@ -96,7 +96,7 @@
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.opotromatic.QuestionsApplication" />
-      <module name="Test2" />
+      <module name="TestJavaBackend" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.opotromatic.*" />
@@ -159,7 +159,6 @@
     </task>
     <servers />
   </component>
-<<<<<<< HEAD
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -176,6 +175,4 @@
       </breakpoints>
     </breakpoint-manager>
   </component>
-=======
->>>>>>> 93ac0e91aa0060b6c4032b0397302635067f8ce6
 </project>

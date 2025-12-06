@@ -1,4 +1,4 @@
-package com.opotromatic.services; // O el paquete base de tu aplicación
+package com.opotromatic.services;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -10,8 +10,7 @@ import java.io.IOException;
 @Component
 public class BrowserLauncher {
 
-    // Añadimos un valor por defecto (:8080) por si no está definido en properties
-    @Value("${server.port:8081}")
+    @Value("${server.port:8080}")
     private String port;
 
     @Value("${server.servlet.context-path:}")
