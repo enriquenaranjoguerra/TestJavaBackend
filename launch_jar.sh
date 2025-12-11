@@ -1,0 +1,1 @@
+java -jar target/TestApp-1.0.0.jar
