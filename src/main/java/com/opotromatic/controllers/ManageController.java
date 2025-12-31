@@ -6,7 +6,8 @@ import com.opotromatic.DTO.UpdateNameDescriptionDTO;
 import com.opotromatic.entities.*;
 import com.opotromatic.repositories.*;
 import com.opotromatic.services.FinderService;
-import com.opotromatic.services.UpdateService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,9 @@ public class ManageController {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final FinderService finderService;
-    private final UpdateService updateService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public ManageController(
             CategoryRepository categoryRepository,
@@ -33,14 +36,14 @@ public class ManageController {
             QuestionRepository questionRepository,
             AnswerRepository answerRepository,
             FinderService finderService,
-            UpdateService updateService) {
+            JdbcTemplate jdbcTemplate) {
         this.categoryRepository = categoryRepository;
         this.blockRepository = blockRepository;
         this.themeRepository = themeRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.finderService = finderService;
-        this.updateService = updateService;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     // --- MÉTODOS DE ACCIÓN (POST) MANTENIDOS ---
@@ -363,4 +366,15 @@ public class ManageController {
             return "redirect:/api/manage/config";
         });
     }
+
+    @PostMapping("/db/export")
+    @Transactional
+    public void exportToSql(@ModelAttribute String path) {
+        // Ejecuta el comando nativo de H2 para volcar todo a un fichero
+        if(path.isEmpty()){
+            path = "C:/backup/backup.sql";
+        }
+        jdbcTemplate.execute("SCRIPT TO '" + path + "'");
+    }
+
 }
